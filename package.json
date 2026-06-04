@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+      "server": "json-server --watch db.json --port 5000"
   },
   "dependencies": {
     "@better-auth/mongo-adapter": "^1.6.14",
@@ -14,6 +15,7 @@
     "@heroui/react": "^3.0.5",
     "@heroui/styles": "^3.0.5",
     "better-auth": "^1.6.14",
+    "json-server": "^1.0.0-beta.15",
     "kysely": "^0.28.17",
     "mongodb": "^7.2.0",
     "next": "16.2.6",
