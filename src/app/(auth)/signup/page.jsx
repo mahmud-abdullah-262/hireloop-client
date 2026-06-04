@@ -1,84 +1,75 @@
 "use client";
 import { Button, Description, FieldError, Form, Input, Label, TextField, toast } from '@heroui/react';
+import { Radio, RadioGroup} from "@heroui/react";
 import {Check, Eye, EyeClosed} from "@gravity-ui/icons";
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 
 import { useRouter } from "next/navigation";
 
 
 import React from 'react';
-import { authClient } from '@/lib/auth-client';
-// import { Router } from 'next/router';
+import { authClient, signUp } from '@/lib/auth-client';
+
 
 const SignUpPage = () => {
-  const router = useRouter(); 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
- 
+  const router = useRouter();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [photo, setPhoto] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [role, setRole] = useState("seeker");
   const [authError, setAuthError] = useState("");
   const [loading, setLoading] = useState(false);
 
 
-   const onSubmit = async (data) => {
-  setAuthError("");
-  setLoading(true);
-    console.log(data);
+ 
+  const onSubmit = async (e) => {
+    console.log(name, email, password, photo, role, 'from user input data')
+    e.preventDefault();
+    setAuthError("");
+    setLoading(true);
+   
 
-  try {
-    const { error } = await authClient.signUp.email(
-      {
-        name: data.name,
-        email: data.email,
-        password: data.password,
-        image: data.photo || undefined,
-      },
-      {
-        onSuccess: () => {
-          toast.success("You have successfully signed up!", {
-            description: "You can continue learning with MediQueue.",
-            actionProps: {
-              children: "Home",
-              className: "bg-success text-success-foreground",
-            },
-          });
-
-          router.push("/");
-          router.refresh();
-        },
-        onError: (ctx) => {
-          const message = ctx?.error?.message || "Signup failed";
-
-          setAuthError(message);
-          toast.warning("Signup Failed!", {
-            description: message,
-            actionProps: {
-              children: "Retry",
-              className: "bg-warning text-warning-foreground",
-            },
-          });
-        },
-      }
-    );
-
-    if (error) {
-      const message = error.message || "Signup failed";
-      setAuthError(message);
-      toast.warning("Signup Failed!", {
-        description: message,
+    try {
+      const { data, error: authError } = await signUp.email({
+        email,
+        password,
+        name,
+        role,
+        callbackURL: "/",
       });
-      return;
+
+      if (authError) {
+        setAuthError(authError.message);
+        toast.warning("Signup Failed!", {
+          description: authError.message, // ✅ 'message' → 'authError.message'
+          actionProps: {
+            children: "Retry",
+            className: "bg-warning text-warning-foreground",
+          },
+        });
+        return;
+      } else {
+        toast.success("You have successfully signed up!", {
+          description: "You can continue learning with MediQueue.",
+          actionProps: {
+            children: "Home",
+            className: "bg-success text-success-foreground",
+          },
+        });
+        router.push("/");
+        return;
+      }
+    } catch (err) {             
+      console.error(err);
+      setAuthError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);        
     }
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
 
 
@@ -87,7 +78,7 @@ const SignUpPage = () => {
     <Form
       className="flex w-96 flex-col gap-4 p-16 rounded-2xl shadow-xl border"
       render={(props) => <form {...props} data-custom="foo" />}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={onSubmit}
     >
 
 
@@ -95,7 +86,7 @@ const SignUpPage = () => {
         isRequired
         name="name"
         type="text"
-        {...register('name')}
+        onChange={setName}
        
       >
         <Label>Name</Label>
@@ -107,7 +98,7 @@ const SignUpPage = () => {
         isRequired
         name="photo"
         type="text"
-        {...register('photo')}
+        onChange={setPhoto}
        
       >
         <Label>Photo URL</Label>
@@ -119,7 +110,7 @@ const SignUpPage = () => {
         isRequired
         name="email"
         type="email"
-        {...register('email')}
+        onChange={setEmail}
         validate={(value) => {
           if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
             return "Please enter a valid email address";
@@ -131,12 +122,46 @@ const SignUpPage = () => {
         <Input placeholder="john@example.com" />
         <FieldError />
       </TextField>
+
+
+<div className="flex flex-col gap-4">
+      <Label>Role</Label>
+        
+      
+
+      <RadioGroup 
+      defaultValue="seeker" 
+      name="role" 
+      onChange={value => setRole(value)} 
+      orientation="horizontal">
+
+        <Radio value="seeker">
+          <Radio.Control>
+            <Radio.Indicator />
+          </Radio.Control>
+          <Radio.Content>
+            <Label>Job Seeker</Label>
+          </Radio.Content>
+        </Radio>
+        <Radio value="recruiter">
+          <Radio.Control>
+            <Radio.Indicator />
+          </Radio.Control>
+          <Radio.Content>
+            <Label>Recruiter</Label>
+          </Radio.Content>
+        </Radio>
+       
+      </RadioGroup>
+    </div>
+
+
       <TextField
         isRequired
         minLength={8}
         name="password"
         type={showPassword ? 'text' : 'password'}
-        {...register('password')}
+        onChange={setPassword}
         validate={(value) => {
           if (value.length < 8) {
             return "Password must be at least 8 characters";
@@ -171,6 +196,8 @@ const SignUpPage = () => {
         <Description>Must be at least 8 characters with 1 uppercase and 1 number</Description>
         <FieldError />
       </TextField>
+
+
       <div className="flex gap-2">
         <Button type="submit">
           <Check />
@@ -185,6 +212,7 @@ const SignUpPage = () => {
    </div>
   );
 };
+
 
 export default SignUpPage;
 
