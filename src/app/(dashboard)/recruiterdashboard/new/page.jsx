@@ -138,7 +138,7 @@ const RecruiterNewJob = () => {
       console.log("Job data after post:", res)
       if(res.insertedId){
         toast.success('Job posted successfully!')
-        router.push('/recruiter/recruiteralljobs');
+        router.push('/recruiterdashboard/recruiteralljobs');
       }
       else{
           setSuccess(true);

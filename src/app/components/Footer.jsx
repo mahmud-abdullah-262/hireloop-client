@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Footer() {
@@ -10,16 +11,20 @@ export default function Footer() {
           
           {/* Left Column: Brand & Description */}
           <div className="md:col-span-5 flex flex-col space-y-4">
-            <div className="flex items-center space-x-2 cursor-pointer">
-              {/* Logo Matching Hero Style */}
-              <div className="h-9 w-9 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center font-bold text-white text-lg shadow-md shadow-purple-500/20">
-                {"</>"}
-              </div>
-              <div className="flex flex-col leading-tight">
-                <span className="font-bold text-white text-base tracking-wide">Programming</span>
-                <span className="font-semibold text-zinc-400 text-sm">Hero</span>
-              </div>
-            </div>
+           <div className="flex items-center cursor-pointer">
+                     {/* Mock Logo Icon matching Programming Hero style */}
+                     <Link href={'/'}>
+                     <Image
+                     src={'/images/logow.svg'}
+                     width={300}
+                     height={100}
+                     alt=" Logo"
+                     className="w-36 h-24"
+                     />
+           
+                     
+                     </Link>
+                     </div>
             
             <p className="text-zinc-500 text-sm max-w-sm leading-relaxed">
               The AI-native career platform. Built for people who take their work seriously.
