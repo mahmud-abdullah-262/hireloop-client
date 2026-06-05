@@ -58,6 +58,7 @@ const MOCK_COMPANY = {
   industry: "Technology",
   location: "Dhaka, Bangladesh",
   approved: true,
+  companyId: "1234567890",
 };
 
 const JOB_CATEGORIES = [
@@ -127,6 +128,7 @@ const RecruiterNewJob = () => {
       const data = {
         ...form,
         company: MOCK_COMPANY.name,
+        companyId: MOCK_COMPANY.companyId,
         status: "active",
         postedAt: new Date().toISOString(),
         isPublic: true,
@@ -267,7 +269,7 @@ const RecruiterNewJob = () => {
               <TextField name="currency" onChange={set("currency")}>
                 <Input
                   list="currencies"
-                  defaultValue="BDT"
+            
                   className="w-full text-center"
                 />
                 <datalist id="currencies">

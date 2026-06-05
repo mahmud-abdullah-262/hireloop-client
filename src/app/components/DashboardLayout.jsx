@@ -1,29 +1,31 @@
 
-
-import {LayoutSideContentLeft, Bell, Envelope, Gear, House, Magnifier, Person} from "@gravity-ui/icons";
+'use client'
+import {LayoutSideContentLeft, Plus, Briefcase, Gear, House, Magnifier, Person} from "@gravity-ui/icons";
 import {Button, Drawer} from "@heroui/react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function DashboardLayout() {
-  const navItems = [
-    {icon: House, label: "Home"},
-    {icon: Magnifier, label: "Search"},
-    {icon: Bell, label: "Notifications"},
-    {icon: Envelope, label: "Messages"},
-    {icon: Person, label: "Profile"},
-    {icon: Gear, label: "Settings"},
-  ];
-  const navLinks =  <nav className="flex flex-col gap-1">
-                {navItems.map((item) => (
-                  <button
-                    key={item.label}
-                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-default"
-                    type="button"
-                  >
-                    <item.icon className="size-5 text-muted" />
-                    {item.label}
-                  </button>
-                ))}
-              </nav>;
+  const pathname = usePathname();
+ const navItems = [
+  { icon: House,    label: "Home",          href: "/recruiterdashboard" },
+  { icon: Plus,     label: "Create a job",   href: "/recruiterdashboard/new" },
+  { icon: Briefcase, label: "All Jobs",       href: "/recruiterdashboard/recruiteralljobs" },
+  { icon: Person,   label: "Profile",        href: "/recruiterdashboard/recruitercompany" },
+  { icon: Gear,     label: "Settings",       href: "#2" },
+];
+  const navLinks =    <nav>
+      {navItems.map(({ icon: Icon, label, href }) => (
+        <Link
+          key={href}
+          href={href}
+          className={`nav-item flex gap-2 items-center justify-start p-1 rounded ${pathname === href ? "active" : ""}`}
+        >
+          <Icon />
+          <span>{label}</span>
+        </Link>
+      ))}
+    </nav>
 
 
   return (
