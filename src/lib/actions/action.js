@@ -1,23 +1,12 @@
 
 "use server";
 import { v2 as cloudinary } from "cloudinary";
+import { serverMutate } from "../core/serverMutate";
 
-const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL || 'http://localhost:8000';
-
-export async function createJob(newJobData) {
-  console.log(newJobData , 'function called')
-  const res = await fetch(`${baseUrl}/api/jobs`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(newJobData),
-  });
-  const data = await res.json();
-  console.log(data , 'data after post')
-  return data;
-
+export const createJob = async (newJobData) => {
+  return await serverMutate('/api/jobs', newJobData)
 }
+
 
 
 
@@ -66,4 +55,9 @@ export async function uploadToCloudinary(formData) {
       )
       .end(buffer);
   });
+}
+
+
+export async function createCompany(newCompanyData) {
+  return  serverMutate('/api/companies', newCompanyData)
 }

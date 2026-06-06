@@ -5,14 +5,13 @@ import { StatCard } from "@/app/components/StatCard";
 import { TopCompanyCard } from "@/app/components/TopCompanyCard";
 import { auth } from "@/lib/auth";
 import { useSession } from "@/lib/auth-client";
+import { getSessionData } from "@/lib/session/getSession";
 import { Spinner } from "@heroui/react";
 import { headers } from "next/headers";
 
 const RecruiterPage = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-  const user = session?.user;
+  
+  const user = getSessionData()
   console.log(user, 'user');
 
 

@@ -44,23 +44,18 @@ const CompanyProfile = ({company}) => {
         <Avatar.Image alt="John Doe" src="https://img.heroui.chat/image/avatar?w=400&h=400&u=3" />
         <Avatar.Fallback>{initials}</Avatar.Fallback>
       </Avatar>
-          <div className="flex flex-col gap-1.5 min-w-0">
+          <div className="flex gap-1.5 min-w-0">
             <h1 className="text-2xl font-bold text-white leading-tight truncate">
               {company.name}
             </h1>
             <div className="flex items-center gap-2 flex-wrap">
               {company.approved ? (
-                <Badge
-                  content=""
-                  color="success"
-                  placement="top-right"
-                  className="hidden"
-                >
+              
                   <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/20">
                     <CircleCheck width={12} height={12} />
                     Approved
                   </span>
-                </Badge>
+               
               ) : (
                 <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/20">
                   <Clock width={12} height={12} />

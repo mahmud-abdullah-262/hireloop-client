@@ -144,7 +144,6 @@ const RecruiterNewJob = () => {
           setSuccess(true);
       }
     
-      // router.push("/recruiter/jobs");
     } catch (err) {
       setError("An error occurred while posting the job. Please try again.");
     } finally {

@@ -6,12 +6,15 @@ import { authClient } from "@/lib/auth-client";
 import { Button } from "@heroui/react";
 import Image from "next/image";
 
-export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-   const { data: session, isPending } =  authClient.useSession();
-  const user = session?.user;
-  console.log(user, 'user');
 
+
+export default  function Navbar({user}) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  console.log(user, 'user');
+  
+  //  const { data: session, isPending } =  authClient.useSession();
+  // const user = session?.user
   return (
     <nav className="w-full bg-[#111111] text-[#E5E5E5] px-6 border-b border-zinc-800">
       <div className="max-w-7xl mx-auto flex items-center justify-between">

@@ -10,11 +10,25 @@ import {
   TextField,
   Select,
   ListBox,
+  toast,
 } from "@heroui/react";
 import { LogoUpload } from "./LogoUpload";
 import { useState } from "react";
+import { createCompany } from "@/lib/actions/action";
+import { useRouter } from "next/navigation";
+import { Router } from "next/router";
 
-export function RegisterCompany() {
+
+export  function RegisterCompany({user}) {
+  console.log(user, 'user Data from form')
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+
+
+
+
   const [companyName, setCompanyName] = useState("");
   const [category, setCategory] = useState("");
   const [url, setUrl] = useState("");
@@ -22,8 +36,8 @@ export function RegisterCompany() {
   const [employeeCount, setEmployeeCount] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
   const [description, setDescription] = useState("");
-
-  const handleSubmit = (e) => {
+  const userData = user
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const data = {
@@ -34,10 +48,36 @@ export function RegisterCompany() {
       employeeCount,
       logoUrl,
       description,
+      // recruiter: userData.id
     };
 
-    console.log(data);
-    // এখানে fetch/server action call করবে
+  
+    
+     setLoading(true);
+        try {
+         
+         
+          const res = await createCompany(data);
+          console.log(res.insertedId)
+          if(res.insertedId){
+            toast.success('Company Registered successfully!')
+             setTimeout(() => {
+      window.location.reload();
+    }, 500);
+          }
+          else{
+              setSuccess(true);
+          }
+        
+          
+        } catch (err) {
+          setError("An error occurred while posting the job. Please try again.");
+        } finally {
+          setLoading(false);
+        }
+
+
+
   };
 
   return (
