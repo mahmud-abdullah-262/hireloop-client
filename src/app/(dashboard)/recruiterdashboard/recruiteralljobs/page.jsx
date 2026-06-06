@@ -1,13 +1,16 @@
 // RecruiterAllJob.jsx (Server Component)
 import JobsTable from '@/app/components/JobsTable';
-import { getCompanyJobs } from '@/lib/api/getJobs';
+import { getCompanyJobs, getLoggedInRecruiterCompany } from '@/lib/api/fetchFunctions';
 import { Button } from '@heroui/react';
+import { ObjectId } from 'mongodb';
 import Link from 'next/link';
 
 
 const RecruiterAllJob = async () => {
-  const companyId = 1234567890;
+  const recruiterCompany = await getLoggedInRecruiterCompany()
+  const companyId = new ObjectId(recruiterCompany._id);
   const jobs = await getCompanyJobs(companyId);
+  console.log(jobs, 'data form job table')
  
   return (
     <div className="p-6 w-full">

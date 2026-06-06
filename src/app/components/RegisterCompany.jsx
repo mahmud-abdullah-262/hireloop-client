@@ -17,9 +17,12 @@ import { useState } from "react";
 import { createCompany } from "@/lib/actions/action";
 import { useRouter } from "next/navigation";
 import { Router } from "next/router";
+import { authClient } from "@/lib/auth-client";
 
 
-export  function RegisterCompany({user}) {
+export  function RegisterCompany() {
+  const { data: session } = authClient.useSession()
+  const user = session?.user
   console.log(user, 'user Data from form')
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -36,7 +39,6 @@ export  function RegisterCompany({user}) {
   const [employeeCount, setEmployeeCount] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
   const [description, setDescription] = useState("");
-  const userData = user
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -48,7 +50,7 @@ export  function RegisterCompany({user}) {
       employeeCount,
       logoUrl,
       description,
-      // recruiter: userData.id
+      recruiterId: user?.id || null
     };
 
   

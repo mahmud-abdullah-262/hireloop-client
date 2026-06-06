@@ -11,7 +11,7 @@ import { headers } from "next/headers";
 
 const RecruiterPage = async () => {
   
-  const user = getSessionData()
+ const user = getSessionData()
   console.log(user, 'user');
 
 

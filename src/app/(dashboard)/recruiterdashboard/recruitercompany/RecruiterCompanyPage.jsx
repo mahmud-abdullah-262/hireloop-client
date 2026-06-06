@@ -1,10 +1,11 @@
-'use client';
 
-import React, { useState } from 'react';
+
+
 import { Factory, Plus } from '@gravity-ui/icons';
 import { Button, Badge, Card, Divider, Avatar } from '@heroui/react';
 import CompanyProfile from '@/app/components/CompanyProfile';
 import { RegisterCompany } from '@/app/components/RegisterCompany';
+import { getRecruiterCompany } from '@/lib/api/fetchFunctions';
 
 
 const MOCK_COMPANY = {
@@ -17,7 +18,7 @@ const MOCK_COMPANY = {
 };
 
 // সেশন ডাটা দিয়ে রিপ্লেস করার জন্য এখানে null করুন
-const SESSION_COMPANY = null ; // null করলে empty state দেখাবে
+const SESSION_COMPANY = MOCK_COMPANY ; // null করলে empty state দেখাবে
 
 const InfoRow = ({ icon: Icon, label, value, isLink }) => (
   <div className="flex items-start gap-3 py-3">
@@ -42,7 +43,7 @@ const InfoRow = ({ icon: Icon, label, value, isLink }) => (
   </div>
 );
 
-const EmptyState = ({user}) => (
+const EmptyState = () => (
   <div className="flex flex-col items-center justify-center min-h-[60vh] gap-8 px-4">
     <div className="relative">
       <div className="w-24 h-24 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center">
@@ -61,18 +62,22 @@ const EmptyState = ({user}) => (
     </div>
 
   
-      <RegisterCompany user={user}></RegisterCompany>
+      <RegisterCompany></RegisterCompany>
   
   </div>
 );
 
 
-const RecruiterCompanyPage = ({user}) => {
-  const company = SESSION_COMPANY;
+const RecruiterCompanyPage = async ({user}) => {
+  const userdata = await user
+  const recruiterId = userdata.id
+const companyData = await getRecruiterCompany(recruiterId)
+  console.log(companyData, 'company data')
+  const company = companyData;
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white w-full">
-      {company ? <CompanyProfile company={company} /> : <EmptyState />}
+      {company ? <CompanyProfile companyData={companyData} /> : <EmptyState />}
     </div>
   );
 };

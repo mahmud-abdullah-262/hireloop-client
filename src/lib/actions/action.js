@@ -1,16 +1,12 @@
 
 "use server";
 import { v2 as cloudinary } from "cloudinary";
-import { serverMutate } from "../core/serverMutate";
-
+import { serverMutate } from "../core/server";
+import { revalidatePath } from "next/cache";
+const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL;
 export const createJob = async (newJobData) => {
   return await serverMutate('/api/jobs', newJobData)
 }
-
-
-
-
-
 
 
 cloudinary.config({
@@ -60,4 +56,18 @@ export async function uploadToCloudinary(formData) {
 
 export async function createCompany(newCompanyData) {
   return  serverMutate('/api/companies', newCompanyData)
+}
+
+
+export async function updateCompany(companyId, formData) {
+  const res = await fetch(`${baseUrl}/api/myCompany/${companyId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(formData),
+  })
+
+  if (!res.ok) throw new Error('Update failed')
+
+  revalidatePath('/recruiterdashboard/recruitercompany') // তোমার actual path দাও
+  return await res.json()
 }

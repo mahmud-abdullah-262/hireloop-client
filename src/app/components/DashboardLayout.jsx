@@ -5,7 +5,7 @@ import {Button, Drawer} from "@heroui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export function DashboardLayout() {
+export function DashboardLayout({user}) {
   const pathname = usePathname();
  const navItems = [
   { icon: House,    label: "Home",          href: "/recruiterdashboard" },
