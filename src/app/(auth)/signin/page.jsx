@@ -120,8 +120,9 @@ const SignInPage = () => {
           Reset
         </Button>
       </div>
-      
+       <p className='text-xs text-center'>Do not have Account? <Link className='text-blue-500' href={'/signup'}>Signup</Link></p>
     </Form>
+    
    </div>
   );
 };

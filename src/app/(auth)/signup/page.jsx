@@ -207,7 +207,7 @@ const SignUpPage = () => {
           Reset
         </Button>
       </div>
-      
+      <p className='text-xs text-center'>Already have Account? <Link className='text-blue-400' href={'/signin'}>Login</Link></p>
     </Form>
    </div>
   );

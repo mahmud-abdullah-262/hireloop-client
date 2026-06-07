@@ -1,3 +1,4 @@
+import { getAllJobs } from "@/lib/api/fetchFunctions";
 import {
   Briefcase,
   Persons,
@@ -26,8 +27,8 @@ const stats = [
 ];
 
 export async function StatCard() {
-  const jobStats = await fetch("http://localhost:5000/jobs");
-  const jobRes = await jobStats.json();
+  
+  const jobRes = await getAllJobs()
 
   const candidates = await fetch("http://localhost:5000/candidates");
   const candidatesRes= await candidates.json();

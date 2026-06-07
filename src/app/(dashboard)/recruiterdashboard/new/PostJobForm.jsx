@@ -34,6 +34,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { createJob } from "@/lib/actions/action";
 import Router from "next/router";
+import Link from "next/link";
 
 
 // ─── Section wrapper ──────────────────────────────────────────────────────────
@@ -89,6 +90,20 @@ const CURRENCIES = ["BDT", "USD", "EUR", "GBP", "INR", "AED", "SGD"];
 // ─── Main component ───────────────────────────────────────────────────────────
 const PostJobForm = ({company}) => {
  
+    if (!company) {
+    return (
+      <div className='flex flex-col gap-4 items-center justify-center py-20'>
+        <p className='text-gray-500'>
+       Please create a company profile before posting a job.
+        </p>
+        <Link href={'/recruiterdashboard/new'}>
+           <Button>Create A job If you have a company</Button>
+          </Link>
+      </div>
+    );
+  };
+
+
   const router = useRouter();
   const companyData = company;
   console.log(company, 'company data form inside form')
