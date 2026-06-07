@@ -29,6 +29,9 @@ export const getAllJobs = async() => {
   return await serverFetch(`/api/jobs`)
 }
 
+export const getJobById = async(jobId) =>{
+  return await serverFetch(`/api/jobs/${jobId}`)
+}
 export const getLoggedInRecruiterCompany = async () =>{
   const user = await getSessionData()
   const company = getRecruiterCompany(user.id);
