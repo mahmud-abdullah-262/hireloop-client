@@ -5,14 +5,18 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 
 import React from 'react';
 import { authClient } from '@/lib/auth-client';
 
 const SignInPage = () => {
+
   const router = useRouter(); 
+  const searchParams = useSearchParams()
+  const redirectTO = searchParams.get('redirect') || '/'
+  console.log(redirectTO, 'redirect data form signin')
   const onSubmit = async (data) => {
   const { email, password} = data;
   console.log( email, password, 'user data form')
@@ -24,7 +28,7 @@ const SignInPage = () => {
      fetchOptions: {
     onSuccess: () => {
       toast.success('signin successful!')
-      router.push("/");  // সফল হলে redirect
+      router.push(redirectTO);  // সফল হলে redirect
     },
     onError: (ctx) => {
       console.error(ctx.error.message);
@@ -120,7 +124,7 @@ const SignInPage = () => {
           Reset
         </Button>
       </div>
-       <p className='text-xs text-center'>Do not have Account? <Link className='text-blue-500' href={'/signup'}>Signup</Link></p>
+       <p className='text-xs text-center'>Do not have Account? <Link className='text-blue-500' href={`/signup?redirect=${redirectTO}`}>Signup</Link></p>
     </Form>
     
    </div>

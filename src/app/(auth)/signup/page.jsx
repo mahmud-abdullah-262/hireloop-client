@@ -5,7 +5,7 @@ import {Check, Eye, EyeClosed} from "@gravity-ui/icons";
 import Link from 'next/link';
 import { useState } from 'react';
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 
 import React from 'react';
@@ -23,8 +23,9 @@ const SignUpPage = () => {
   const [role, setRole] = useState("seeker");
   const [authError, setAuthError] = useState("");
   const [loading, setLoading] = useState(false);
-
-
+  const searchParams = useSearchParams()
+  const redirectTO = searchParams.get('redirect') || '/'
+  console.log(redirectTO, 'redirect data')
  
   const onSubmit = async (e) => {
     console.log(name, email, password, photo, role, 'from user input data')
@@ -39,7 +40,6 @@ const SignUpPage = () => {
         password,
         name,
         role,
-        callbackURL: "/",
       });
 
       if (authError) {
@@ -60,7 +60,7 @@ const SignUpPage = () => {
             className: "bg-success text-success-foreground",
           },
         });
-        router.push("/");
+        router.push(redirectTO);
         return;
       }
     } catch (err) {             
@@ -207,7 +207,7 @@ const SignUpPage = () => {
           Reset
         </Button>
       </div>
-      <p className='text-xs text-center'>Already have Account? <Link className='text-blue-400' href={'/signin'}>Login</Link></p>
+      <p className='text-xs text-center'>Already have Account? <Link className='text-blue-400' href={`/signin?redirect=${redirectTO}`}>Login</Link></p>
     </Form>
    </div>
   );

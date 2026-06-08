@@ -12,6 +12,8 @@ import {
   MapPinMinus,
   PaperPlane,
 } from "@gravity-ui/icons";
+import Image from "next/image";
+import Link from "next/link";
 
 
 
@@ -38,9 +40,7 @@ function formatDate(dateStr) {
 }
 
 export default function JobDetailCard({job}) {
-  const handleApply = () => {
-    console.log("Apply clicked for job:", job._id);
-  };
+ 
 
   return (
     <Card className="bg-[#0f0f11] my-4 rounded-2xl overflow-hidden w-11/12 mx-auto">
@@ -49,9 +49,11 @@ export default function JobDetailCard({job}) {
       <Card.Header className="flex items-start gap-4 px-6 pt-6 pb-4 border-b border-[#1e1e22]">
         {/* Logo */}
         <div className="w-14 h-14 rounded-xl bg-white border border-[#2a2a2e] flex items-center justify-center flex-shrink-0 overflow-hidden">
-          <img
+          <Image
             src={job.logoUrl}
             alt={`${job.company} logo`}
+            width={50}
+            height={50}
             className="w-9 h-9 object-contain"
           />
         </div>
@@ -169,13 +171,13 @@ export default function JobDetailCard({job}) {
           </p>
         </div>
 
-        <Button
-          onPress={handleApply}
+        <Link
+          href={`/jobs/${job._id}/apply`}
           className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2 rounded-lg flex items-center gap-2"
           startContent={<PaperPlane className="w-4 h-4" />}
         >
           Apply Now
-        </Button>
+        </Link>
       </Card.Footer>
     </Card>
   );
