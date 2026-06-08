@@ -43,7 +43,7 @@ export default  function Navbar({user}) {
           <div className="bg-[#1A1A1A] border border-zinc-800/80 rounded-md px-6 py-2 flex items-center space-x-6 text-sm font-medium text-zinc-300">
             <Link href="/jobs" className="hover:text-white transition-colors">Browse Jobs</Link>
             <Link href="#" className="hover:text-white transition-colors">Companies</Link>
-            <Link href="#" className="hover:text-white transition-colors">Pricing</Link>
+            <Link href="/plan" className="hover:text-white transition-colors">Pricing</Link>
           </div>
 
           {/* Divider */}
@@ -101,7 +101,7 @@ export default  function Navbar({user}) {
   <div className="md:hidden mt-4 bg-[#1A1A1A] border border-zinc-800 rounded-2xl p-4 flex flex-col space-y-4 text-sm font-medium text-zinc-300">
     <Link href="/jobs" onClick={() => setIsOpen(false)} className="hover:text-white py-1 border-b border-zinc-800/50">Browse Jobs</Link>
     <Link href="#" onClick={() => setIsOpen(false)} className="hover:text-white py-1 border-b border-zinc-800/50">Company</Link>
-    <Link href="#" onClick={() => setIsOpen(false)} className="hover:text-white py-1">Pricing</Link>
+    <Link href="/plan" onClick={() => setIsOpen(false)} className="hover:text-white py-1">Pricing</Link>
     
     <div className="flex items-center space-x-4 text-sm font-medium">
       {user ? 
