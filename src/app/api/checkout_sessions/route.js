@@ -27,6 +27,7 @@ export async function POST(request) {
       ],
       customer_email: userEmail,
       mode: 'subscription',
+      metadata : {planId},
       success_url: `${origin}/plan/success?session_id={CHECKOUT_SESSION_ID}`,
     });
      return NextResponse.json({ url: session.url })

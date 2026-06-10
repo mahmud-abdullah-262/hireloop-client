@@ -26,7 +26,7 @@ const SignUpPage = () => {
   const searchParams = useSearchParams()
   const redirectTO = searchParams.get('redirect') || '/'
   console.log(redirectTO, 'redirect data')
- 
+  const plan = role == 'seeker' ? 'seeker_free' : 'recruiter_free'
   const onSubmit = async (e) => {
     console.log(name, email, password, photo, role, 'from user input data')
     e.preventDefault();
@@ -40,6 +40,7 @@ const SignUpPage = () => {
         password,
         name,
         role,
+        plan
       });
 
       if (authError) {

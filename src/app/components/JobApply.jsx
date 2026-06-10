@@ -26,7 +26,7 @@ import {
 } from '@heroui/react';
 import Image from 'next/image';
 import React, { useState, useRef } from 'react';
-
+import NextLink from 'next/link';
 const DummyJob = {
   _id: { $oid: "6a2532ed97de561d0d00f09a" },
   title: "Frontend Engineer",
@@ -251,14 +251,15 @@ const handleFile = async (e) => {
             </p>
             <p className="text-sm text-default-500">You can expect a response within 3–5 business days.</p>
           </div>
-          <Button
-            variant="flat"
-            color="primary"
-            className="w-full rounded-xl"
-            onPress={() => setStep(1)}
-          >
-            Submit Another Application
-          </Button>
+      
+           <NextLink
+  href='/jobs'
+  className="w-full rounded-xl bg-white text-black px-4 py-2.5 text-sm font-medium text-center block"
+>
+  Submit Another Application
+</NextLink>
+     
+         
         </div>
       </div>
     );

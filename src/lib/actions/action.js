@@ -75,3 +75,8 @@ export async function updateCompany(companyId, formData) {
 export async function createApplications(applicationData) {
 return serverMutate('/api/applications', applicationData)  
 }
+
+export async function createSubs(subsData) {
+  return serverMutate('/api/subscription', subsData)
+  
+}

@@ -42,3 +42,7 @@ export const getLoggedInRecruiterCompany = async () =>{
 export const getApplicationsByApplicantId = async (applicantId) => {
   return await serverFetch(`/api/applications?${applicantId}`)
 }
+
+export const getPlansData = async (planId) => {
+  return await serverFetch(`/api/plans?planId=${planId}`)
+}
