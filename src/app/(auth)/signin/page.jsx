@@ -31,6 +31,7 @@ const SignInPage = () => {
       router.push(redirectTO);  // সফল হলে redirect
     },
     onError: (ctx) => {
+      toast.warning('sign in failed')
       console.error(ctx.error.message);
     },
   },

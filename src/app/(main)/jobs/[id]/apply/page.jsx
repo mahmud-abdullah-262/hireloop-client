@@ -8,16 +8,16 @@ const ApplyPage = async ({params}) => {
   const { id } = await params;
   const user = await getSessionData();
   const job = await getJobById(id);
-  const applications = await getApplicationsByApplicantId(user.id);
-  const plan = await getPlansData(user.plan)
-  const limit = plan.maxLimitPerMonth == -1 ? 'unlimited' : plan.maxLimitPerMonth
+  const applications = await getApplicationsByApplicantId(user?.id);
+  const plan = await getPlansData(user?.plan)
+  const limit = plan?.maxLimitPerMonth == -1 ? 'unlimited' : plan?.maxLimitPerMonth
   console.log("plan data: ", plan)
 
   if(!user){
     redirect(`/signin?redirect=/jobs/${id}/apply`)
   }
 
-  if(user.role !== 'seeker'){
+  if(user?.role !== 'seeker'){
     return(
       <div className='flex justify-center items-center my-10 w-11/12 mx-auto'>
         <h1 className='text-center text-md text-white/70 font-bold'>Only Job Seeker can Apply this job. Please Login to seeker account to proceed!</h1>
@@ -25,10 +25,10 @@ const ApplyPage = async ({params}) => {
     )
   }
 
-  if(applications.length >= plan.maxLimitPerMonth && plan.maxLimitPerMonth !== -1){
+  if(applications.length >= plan?.maxLimitPerMonth && plan?.maxLimitPerMonth !== -1){
     return (
       <div className='flex justify-center items-center my-10 w-11/12 mx-auto'>
-        <h1 className='text-center text-md text-white/70 font-bold'>On the {plan.name} plan, you can apply for only {plan.maxLimitPerMonth} jobs per month.</h1>
+        <h1 className='text-center text-md text-white/70 font-bold'>On the {plan?.name} plan, you can apply for only {plan?.maxLimitPerMonth} jobs per month.</h1>
       </div>
     )
   }

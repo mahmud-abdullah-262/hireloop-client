@@ -39,6 +39,7 @@ export  function RegisterCompany() {
   const [employeeCount, setEmployeeCount] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
   const [description, setDescription] = useState("");
+  const [status, setStatus] = useState('pending')
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -50,6 +51,7 @@ export  function RegisterCompany() {
       employeeCount,
       logoUrl,
       description,
+      status,
       recruiterId: user?.id || null
     };
 

@@ -14,6 +14,7 @@ import {
   TextArea,
   Popover,
   toast,
+  Chip,
 } from "@heroui/react";
 import { DatePicker } from "@heroui/react";
 import { Switch } from "@heroui/react";
@@ -28,6 +29,7 @@ import {
   ListUl,
   Star,
   Persons,
+  CircleFill,
 } from "@gravity-ui/icons";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -103,6 +105,24 @@ const PostJobForm = ({company}) => {
     );
   };
 
+    if (company.status !== 'approved') {
+    return (
+      <div className='flex flex-col gap-4 items-center justify-center py-20'>
+       
+        <p className="font-bold text-xl text-white/70 flex items-center gap-2">Company Status: {company.status == 'approved' ? <Chip color="success">Approved</Chip>
+            : company.status == 'rejected' ? <Chip color="danger">Rejected</Chip> :
+            company.status == 'inactive' ? <Chip color="warning">Inactive</Chip> :
+              company.status == 'pending' ?<Chip color="warning" variant="primary">
+          <CircleFill width={6} />
+          <Chip.Label>Pending</Chip.Label>
+        </Chip> : ''  }</p>
+         <p className='text-gray-500'>
+       You Can not post a job before approval.
+        </p>
+      </div>
+    );
+  };
+
 
   const router = useRouter();
   const companyData = company;
@@ -134,12 +154,12 @@ const PostJobForm = ({company}) => {
     e.preventDefault();
     setError("");
 
-    // if (!companyData.approved) {
-    //   setError(
-    //     "Your company has not been approved yet. Please contact the administrator."
-    //   );
-    //   return;
-    // }
+    if (companyData.status !== 'approved') {
+      setError(
+        "Your company has not been approved yet. Please contact the administrator."
+      );
+      return;
+    }
 
     setLoading(true);
     try {
@@ -147,7 +167,7 @@ const PostJobForm = ({company}) => {
         ...form,
         company: companyData.companyName,
         companyId: companyData._id,
-        status: "active",
+        status: companyData.status,
         postedAt: new Date().toISOString(),
         isPublic: true,
         
@@ -423,7 +443,7 @@ const PostJobForm = ({company}) => {
 
         {/* ── Section 3: Company ── */}
         <Section icon={Factory} title="Company">
-          {/* {companyData.approved ? (
+      
             <div className="flex items-start gap-4 rounded-xl border px-4 py-3">
               <div className=" rounded-lg p-2">
                 <Factory className="text-white w-5 h-5" />
@@ -444,38 +464,13 @@ const PostJobForm = ({company}) => {
                   {companyData.url}
                 </a>
               </div>
-              <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full font-medium">
-                Approved
-              </span>
-            </div>
-          ) : (
-            <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-xl px-4 py-3 text-sm">
-             ⚠️ Your company has not been approved yet. Admin approval is required to post a job.
-            </div>
-          )} */}
-            <div className="flex items-start gap-4 rounded-xl border px-4 py-3">
-              <div className=" rounded-lg p-2">
-                <Factory className="text-white w-5 h-5" />
-              </div>
-              <div className="flex-1">
-                <p className="font-semibold text-gray-300">
-                  {companyData.companyName}
-                </p>
-                <p className="text-xs text-gray-300">
-                  {companyData.category} · {companyData.location}
-                </p>
-                <a
-                  href={companyData.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-blue-500 hover:underline"
-                >
-                  {companyData.url}
-                </a>
-              </div>
-              <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full font-medium">
-                Approved
-              </span>
+              {companyData.status == 'approved' ? <Chip color="success">Approved</Chip>
+            : companyData.status == 'rejected' ? <Chip color="danger">Rejected</Chip> :
+            companyData.status == 'inactive' ? <Chip color="warning">Inactive</Chip> :
+              companyData.status == 'pending' ?<Chip color="warning" variant="primary">
+          <CircleFill width={6} />
+          <Chip.Label>Pending</Chip.Label>
+        </Chip> : ''  }
             </div>
         </Section>
 
@@ -490,7 +485,7 @@ const PostJobForm = ({company}) => {
         <div className="flex items-center gap-3 pt-2 border-t">
           <Button
             type="submit"
-            // isDisabled={loading || !companyData.approved}
+            isDisabled={loading || !companyData.status == 'approved'}
             className="flex items-center gap-2"
           >
             {loading ? (
@@ -505,8 +500,14 @@ const PostJobForm = ({company}) => {
           <Button type="reset" variant="secondary">
             Reset
           </Button>
-          <p className="ml-auto text-xs text-gray-400">
-            Status: <span className="text-green-600 font-medium">active</span> ·
+          <p className="ml-auto text-xs text-gray-400 flex items-center gap-2">
+            Status:   {companyData.status == 'approved' ? <Chip color="success">Approved</Chip>
+            : companyData.status == 'rejected' ? <Chip color="danger">Rejected</Chip> :
+            companyData.status == 'inactive' ? <Chip color="warning">Inactive</Chip> :
+              companyData.status == 'pending' ?<Chip color="warning" variant="primary">
+          <CircleFill width={6} />
+          <Chip.Label>Pending</Chip.Label>
+        </Chip> : ''  } ·
             Publicly visible
           </p>
         </div>

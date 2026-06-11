@@ -73,35 +73,35 @@ export default function JobDetailCard({job}) {
 
           {/* Badges */}
           <div className="flex flex-wrap gap-2 mt-3">
-            <Chip
-              size="sm"
-              startContent={<Briefcase className="w-3.5 h-3.5" />}
-              className="bg-[#0e1f38] text-[#5b9cf6] border border-[#1a3055] text-xs"
-            >
-              {job.type}
-            </Chip>
-            <Chip
-              size="sm"
-              startContent={<Tag className="w-3.5 h-3.5" />}
-              className="bg-[#281e0a] text-[#e8a838] border border-[#3d2e10] text-xs"
-            >
-              {job.category}
-            </Chip>
-            <Chip
-              size="sm"
-              startContent={<MapPinMinus className="w-3.5 h-3.5" />}
-              className="bg-[#1a1a1f] text-[#8888a0] border border-[#2a2a35] text-xs"
-            >
-              {job.isRemote ? "Remote" : "On-site"}
-            </Chip>
-            <Chip
-              size="sm"
-              startContent={<CircleCheck className="w-3.5 h-3.5" />}
-              className="bg-[#0e2218] text-[#4dbe8c] border border-[#1a3d2a] text-xs capitalize"
-            >
-              {job.status}
-            </Chip>
-          </div>
+  <Chip
+    size="sm"
+    className="bg-[#0e1f38] text-[#5b9cf6] border border-[#1a3055] text-xs"
+  >
+    <Briefcase className="w-3.5 h-3.5 inline mr-1" />
+    {job.type}
+  </Chip>
+  <Chip
+    size="sm"
+    className="bg-[#281e0a] text-[#e8a838] border border-[#3d2e10] text-xs"
+  >
+    <Tag className="w-3.5 h-3.5 inline mr-1" />
+    {job.category}
+  </Chip>
+  <Chip
+    size="sm"
+    className="bg-[#1a1a1f] text-[#8888a0] border border-[#2a2a35] text-xs"
+  >
+    <MapPinMinus className="w-3.5 h-3.5 inline mr-1" />
+    {job.isRemote ? "Remote" : "On-site"}
+  </Chip>
+  <Chip
+    size="sm"
+    className="bg-[#0e2218] text-[#4dbe8c] border border-[#1a3d2a] text-xs capitalize"
+  >
+    <CircleCheck className="w-3.5 h-3.5 inline mr-1" />
+    {job.status}
+  </Chip>
+</div>
         </div>
       </Card.Header>
 
@@ -171,13 +171,13 @@ export default function JobDetailCard({job}) {
           </p>
         </div>
 
-        <Link
-          href={`/jobs/${job._id}/apply`}
-          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2 rounded-lg flex items-center gap-2"
-          startContent={<PaperPlane className="w-4 h-4" />}
-        >
-          Apply Now
-        </Link>
+       <Link
+  href={`/jobs/${job._id}/apply`}
+  className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2 rounded-lg flex items-center gap-2"
+>
+  <PaperPlane className="w-4 h-4" />
+  Apply Now
+</Link>
       </Card.Footer>
     </Card>
   );
