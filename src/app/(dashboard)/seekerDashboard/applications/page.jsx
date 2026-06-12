@@ -3,7 +3,7 @@ import { getSessionData } from '@/lib/session/getSession';
 import React from 'react';
 import { Chip, Table } from '@heroui/react';
 import Link from 'next/link';
-import ApplyTable from '@/app/components/ApplyTable';
+import ApplyTable from '@/app/components/CustomTable';
 const SeekerApplicationsPage = async () => {
   const user = await getSessionData()
   const applications = await getApplicationsByApplicantId(user.id) 

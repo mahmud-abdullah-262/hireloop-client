@@ -64,6 +64,7 @@ export  function RegisterCompany() {
           const res = await createCompany(data);
           console.log(res.insertedId)
           if(res.insertedId){
+            console.log(res, 'company after create')
             toast.success('Company Registered successfully!')
              setTimeout(() => {
       window.location.reload();

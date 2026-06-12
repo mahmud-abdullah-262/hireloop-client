@@ -3,6 +3,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import { serverMutate } from "../core/server";
 import { revalidatePath } from "next/cache";
+import {  toast } from "@heroui/react";
 const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL;
 export const createJob = async (newJobData) => {
   return await serverMutate('/api/jobs', newJobData)
@@ -79,4 +80,12 @@ return serverMutate('/api/applications', applicationData)
 export async function createSubs(subsData) {
   return serverMutate('/api/subscription', subsData)
   
+}
+
+export async function updateCompanyStatus(id, data) {
+  const result = await serverMutate(`/api/companies/${id}`, data, 'PATCH')
+    if(result.success){
+    revalidatePath('/adminDashboard/companies')
+  }
+  return result
 }

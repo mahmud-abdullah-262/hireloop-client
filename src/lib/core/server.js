@@ -1,9 +1,9 @@
 const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL || 'http://localhost:8000';
 
 // server mutation central function
-export const serverMutate = async (path, data) => {
+export const serverMutate = async (path, data, method = 'POST') => {
 const res = await fetch(`${baseUrl}${path}`, {
-    method: 'POST',
+    method: method.toUpperCase(),
     headers: {
       'Content-Type': 'application/json',
     },

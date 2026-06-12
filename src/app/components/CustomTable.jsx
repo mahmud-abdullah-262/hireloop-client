@@ -4,11 +4,12 @@ import { Chip, Pagination, Table } from "@heroui/react";
 import Link from "next/link";
 import { useState } from "react";
 
-const ApplyTable = ({applications}) => {
+const CustomTable = ({data}) => {
+  console.log(data, 'data from component')
  const [page, setPage] = useState(1);
  const ITEMS_PER_PAGE = 5;
-  const totalPages = Math.ceil(applications.length/ITEMS_PER_PAGE);
-  const currentData = applications.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
+  const totalPages = Math.ceil(data.length/ITEMS_PER_PAGE);
+  const currentData = data.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
   return (
     <div>
      <Table className='w-full border'>
@@ -70,4 +71,4 @@ const ApplyTable = ({applications}) => {
   );
 };
 
-export default ApplyTable;
+export default CustomTable;

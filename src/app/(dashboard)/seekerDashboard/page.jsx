@@ -1,4 +1,5 @@
-import ApplyTable from '@/app/components/ApplyTable';
+import CustomTable from '@/app/components/CustomTable';
+
 import { SeekerStatCard } from '@/app/components/seekerStatCard';
 import { getApplicationsByApplicantId } from '@/lib/api/fetchFunctions';
 import { getSessionData } from '@/lib/session/getSession';
@@ -12,7 +13,7 @@ const SeekerDashboard = async () => {
       <h1 className='text-2xl md:text-3xl lg:text-4xl font-bold'>Seeker Dashboard</h1>
       <SeekerStatCard></SeekerStatCard>
       <h1 className='text-xl font-bold'>Applications</h1>
-      <ApplyTable applications={applications}></ApplyTable>
+      <CustomTable applications={applications}></CustomTable>
     </div>
   );
 };
