@@ -5,6 +5,8 @@ import { serverMutate } from "../core/server";
 import { revalidatePath } from "next/cache";
 import {  toast } from "@heroui/react";
 const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL;
+
+
 export const createJob = async (newJobData) => {
   return await serverMutate('/api/jobs', newJobData)
 }

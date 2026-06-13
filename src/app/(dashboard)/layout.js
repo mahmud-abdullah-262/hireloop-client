@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 
 export default async function MainLayout({ children }) {
    const user = await getSessionData() || null
-   console.log(user, 'user from layout')
+  //  console.log(user, 'user from layout')
   
   return (
     <div className="min-h-screen overflow-hidden">

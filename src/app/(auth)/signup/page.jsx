@@ -25,10 +25,10 @@ const SignUpPage = () => {
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams()
   const redirectTO = searchParams.get('redirect') || '/'
-  console.log(redirectTO, 'redirect data')
+  // console.log(redirectTO, 'redirect data')
   const plan = role == 'seeker' ? 'seeker_free' : 'recruiter_free'
   const onSubmit = async (e) => {
-    console.log(name, email, password, photo, role, 'from user input data')
+    // console.log(name, email, password, photo, role, 'from user input data')
     e.preventDefault();
     setAuthError("");
     setLoading(true);

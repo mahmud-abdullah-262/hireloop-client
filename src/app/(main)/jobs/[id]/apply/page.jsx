@@ -11,7 +11,7 @@ const ApplyPage = async ({params}) => {
   const applications = await getApplicationsByApplicantId(user?.id);
   const plan = await getPlansData(user?.plan)
   const limit = plan?.maxLimitPerMonth == -1 ? 'unlimited' : plan?.maxLimitPerMonth
-  console.log("plan data: ", plan)
+  // console.log("plan data: ", plan)
 
   if(!user){
     redirect(`/signin?redirect=/jobs/${id}/apply`)

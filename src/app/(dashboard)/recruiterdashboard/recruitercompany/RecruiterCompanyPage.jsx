@@ -8,17 +8,17 @@ import { RegisterCompany } from '@/app/components/RegisterCompany';
 import { getRecruiterCompany } from '@/lib/api/fetchFunctions';
 
 
-const MOCK_COMPANY = {
-  name: "Acme Corp",
-  website: "https://acmecorp.com",
-  industry: "Technology",
-  location: "Dhaka, Bangladesh",
-  approved: true,
-  companyId: "1234567890",
-};
+// const MOCK_COMPANY = {
+//   name: "Acme Corp",
+//   website: "https://acmecorp.com",
+//   industry: "Technology",
+//   location: "Dhaka, Bangladesh",
+//   approved: true,
+//   companyId: "1234567890",
+// };
 
 // সেশন ডাটা দিয়ে রিপ্লেস করার জন্য এখানে null করুন
-const SESSION_COMPANY = MOCK_COMPANY ; // null করলে empty state দেখাবে
+// const SESSION_COMPANY = MOCK_COMPANY ; // null করলে empty state দেখাবে
 
 const InfoRow = ({ icon: Icon, label, value, isLink }) => (
   <div className="flex items-start gap-3 py-3">
@@ -72,7 +72,7 @@ const RecruiterCompanyPage = async ({user}) => {
   const userdata = await user
   const recruiterId = userdata.id
 const companyData = await getRecruiterCompany(recruiterId)
-  console.log(companyData, 'company data')
+  // console.log(companyData, 'company data')
   const company = companyData;
 
   return (

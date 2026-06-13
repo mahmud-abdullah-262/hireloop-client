@@ -23,7 +23,7 @@ import { authClient } from "@/lib/auth-client";
 export  function RegisterCompany() {
   const { data: session } = authClient.useSession()
   const user = session?.user
-  console.log(user, 'user Data from form')
+  // console.log(user, 'user Data from form')
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -62,7 +62,7 @@ export  function RegisterCompany() {
          
          
           const res = await createCompany(data);
-          console.log(res.insertedId)
+          // console.log(res.insertedId)
           if(res.insertedId){
             console.log(res, 'company after create')
             toast.success('Company Registered successfully!')

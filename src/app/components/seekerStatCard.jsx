@@ -12,7 +12,7 @@ import { Card } from "@heroui/react";
 export async function SeekerStatCard() {
   const user = await getSessionData();
   const applications = await getApplicationsByApplicantId(user.id);
-  console.log(user, 'seeker user')
+  // console.log(user, 'seeker user')
   const total = applications.length;
   const shortlisted = applications.filter((a) => a.status === "Shortlisted").length;
   const interviews = applications.filter((a) => a.status === "Interview").length;

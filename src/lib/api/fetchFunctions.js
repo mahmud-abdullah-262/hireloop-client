@@ -1,22 +1,23 @@
 'use server'
 
-import { serverFetch } from "../core/server";
+import { redirect } from "next/navigation";
+import { protectedFetch, serverFetch } from "../core/server";
 import { getSessionData } from "../session/getSession";
 
 const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL || 'http://localhost:8000';
 
 
 export const getCompany = async () => {
-return serverFetch('/api/companies')
+return protectedFetch('/api/companies')
 }
 
 export const getCompanyJobs = async (companyId, status = 'active') => {
-  console.log(companyId, 'companyId form action')
-  return await serverFetch(`/api/jobs/?companyId=${companyId}&status=${status}`)
+  // console.log(companyId, 'companyId form action')
+  return await protectedFetch(`/api/jobs/?companyId=${companyId}&status=${status}`)
 }
 
 export const getRecruiterCompany = async(recruiterId) => {
-  return await serverFetch(`/api/myCompany?recruiterId=${recruiterId}`)
+  return await protectedFetch(`/api/myCompany?recruiterId=${recruiterId}`)
 }
 
 export const getAllJobs = async() => {
@@ -34,9 +35,11 @@ export const getLoggedInRecruiterCompany = async () =>{
 
 
 export const getApplicationsByApplicantId = async (applicantId) => {
-  return await serverFetch(`/api/applications?applicantId=${applicantId}`)
+  return await protectedFetch(`/api/applications?applicantId=${applicantId}`)
 }
 
 export const getPlansData = async (planId) => {
   return await serverFetch(`/api/plans?planId=${planId}`)
 }
+
+

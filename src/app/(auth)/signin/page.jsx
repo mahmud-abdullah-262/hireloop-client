@@ -16,10 +16,10 @@ const SignInPage = () => {
   const router = useRouter(); 
   const searchParams = useSearchParams()
   const redirectTO = searchParams.get('redirect') || '/'
-  console.log(redirectTO, 'redirect data form signin')
+  // console.log(redirectTO, 'redirect data form signin')
   const onSubmit = async (data) => {
   const { email, password} = data;
-  console.log( email, password, 'user data form')
+  // console.log( email, password, 'user data form')
   const {  data:res, error } = await authClient.signIn.email({
   
     email: email, // required

@@ -11,7 +11,7 @@ import Image from "next/image";
 export default  function Navbar({user}) {
   const [isOpen, setIsOpen] = useState(false);
   
-  console.log( user?.name, 'user');
+  // console.log( user?.name, 'user');
   const navLinks = [
   {
     label: 'Home',  

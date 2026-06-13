@@ -13,7 +13,7 @@ const SeekerDashboard = async () => {
       <h1 className='text-2xl md:text-3xl lg:text-4xl font-bold'>Seeker Dashboard</h1>
       <SeekerStatCard></SeekerStatCard>
       <h1 className='text-xl font-bold'>Applications</h1>
-      <CustomTable applications={applications}></CustomTable>
+      <CustomTable data={applications}></CustomTable>
     </div>
   );
 };

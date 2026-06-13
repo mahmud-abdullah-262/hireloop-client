@@ -105,11 +105,11 @@ const PostJobForm = ({company}) => {
     );
   };
 
-    if (company.status !== 'approved') {
+    if (company.status !== 'approve') {
     return (
       <div className='flex flex-col gap-4 items-center justify-center py-20'>
        
-        <p className="font-bold text-xl text-white/70 flex items-center gap-2">Company Status: {company.status == 'approved' ? <Chip color="success">Approved</Chip>
+        <p className="font-bold text-xl text-white/70 flex items-center gap-2">Company Status: {company.status == 'approve' ? <Chip color="success">Approved</Chip>
             : company.status == 'rejected' ? <Chip color="danger">Rejected</Chip> :
             company.status == 'inactive' ? <Chip color="warning">Inactive</Chip> :
               company.status == 'pending' ?<Chip color="warning" variant="primary">
@@ -126,7 +126,7 @@ const PostJobForm = ({company}) => {
 
   const router = useRouter();
   const companyData = company;
-  console.log(company, 'company data form inside form')
+  // console.log(company, 'company data form inside form')
   const [form, setForm] = useState({
     title: "",
     category: "",
@@ -154,7 +154,7 @@ const PostJobForm = ({company}) => {
     e.preventDefault();
     setError("");
 
-    if (companyData.status !== 'approved') {
+    if (companyData.status !== 'approve') {
       setError(
         "Your company has not been approved yet. Please contact the administrator."
       );
@@ -172,9 +172,9 @@ const PostJobForm = ({company}) => {
         isPublic: true,
         
       };
-      console.log("Job data before post:", data);
+      // console.log("Job data before post:", data);
       const res = await createJob(data);
-      console.log("Job data after post:", res)
+      // console.log("Job data after post:", res)
       if(res.insertedId){
         toast.success('Job posted successfully!')
         router.push('/recruiterdashboard/recruiteralljobs');
@@ -464,7 +464,7 @@ const PostJobForm = ({company}) => {
                   {companyData.url}
                 </a>
               </div>
-              {companyData.status == 'approved' ? <Chip color="success">Approved</Chip>
+              {companyData.status == 'approve' ? <Chip color="success">Approved</Chip>
             : companyData.status == 'rejected' ? <Chip color="danger">Rejected</Chip> :
             companyData.status == 'inactive' ? <Chip color="warning">Inactive</Chip> :
               companyData.status == 'pending' ?<Chip color="warning" variant="primary">
@@ -485,7 +485,7 @@ const PostJobForm = ({company}) => {
         <div className="flex items-center gap-3 pt-2 border-t">
           <Button
             type="submit"
-            isDisabled={loading || !companyData.status == 'approved'}
+            isDisabled={loading || !companyData.status == 'approve'}
             className="flex items-center gap-2"
           >
             {loading ? (
@@ -501,7 +501,7 @@ const PostJobForm = ({company}) => {
             Reset
           </Button>
           <p className="ml-auto text-xs text-gray-400 flex items-center gap-2">
-            Status:   {companyData.status == 'approved' ? <Chip color="success">Approved</Chip>
+            Status:   {companyData.status == 'approve' ? <Chip color="success">Approved</Chip>
             : companyData.status == 'rejected' ? <Chip color="danger">Rejected</Chip> :
             companyData.status == 'inactive' ? <Chip color="warning">Inactive</Chip> :
               companyData.status == 'pending' ?<Chip color="warning" variant="primary">

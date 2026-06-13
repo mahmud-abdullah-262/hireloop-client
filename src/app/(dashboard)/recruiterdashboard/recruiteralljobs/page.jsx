@@ -27,7 +27,7 @@ const RecruiterAllJob = async () => {
   }
   const companyId = new ObjectId(recruiterCompany._id);
   const jobs = await getCompanyJobs(companyId);
-  console.log(jobs, 'data form job table')
+  // console.log(jobs, 'data form job table')
   return (
     <div className="p-6 w-full">
       <div className="flex items-center justify-between mb-6">

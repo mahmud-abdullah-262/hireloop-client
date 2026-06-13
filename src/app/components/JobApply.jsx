@@ -216,7 +216,7 @@ const handleFile = async (e) => {
   };
 
   const submit = async () => {
-    console.log( 'submitted data form applicant:', form)
+    // console.log( 'submitted data form applicant:', form)
     const postApplication =  await createApplications(form)
 
     if(postApplication.insertedId){

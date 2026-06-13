@@ -1,7 +1,7 @@
 'use client'
 
 import { updateCompanyStatus } from "@/lib/actions/action";
-import { Button, Chip, Pagination, Table } from "@heroui/react";
+import { Button, Chip, Pagination, Table, toast } from "@heroui/react";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -9,10 +9,23 @@ import { useState } from "react";
 const CompanyTable =  ({data}) => {
   const handleApprove = async(companyData) => {
    const id = companyData._id ;
-  console.log(companyData, id, 'handle approve clicked')
+  // console.log(companyData, id, 'handle approve clicked')
+    
+  const result =  await updateCompanyStatus(id, companyData)
+  if(result){
+    toast.success('Company Approved.')
+  }
+  // console.log('data after update:', companyData, id)
+ }
+const handleReject = async(companyData) => {
+   const id = companyData._id ;
+  // console.log(companyData, id, 'handle approve clicked')
 
   const result =  await updateCompanyStatus(id, companyData)
-  console.log('data after update:', companyData, id)
+  if(result){
+    toast.danger('Company Rejected.')
+  }
+  // console.log('data after update:', companyData, id)
  }
 
  
@@ -47,12 +60,18 @@ const CompanyTable =  ({data}) => {
               </Table.Cell>
               <Table.Cell>
                 {company.status == 'approve' ? <Chip color="success">Approved</Chip>
-                : company.status == 'rejected' ? <Chip color="danger">Rejected</Chip>
+                : company.status == 'reject' ? <Chip color="danger">Rejected</Chip>
                 :  company.status == 'inactive' ? <Chip color="warning">Inactive</Chip>
                : <Chip color="warning">Pending</Chip> }</Table.Cell>
               <Table.Cell className={'space-x-1'}>
                 <Button 
-                
+                 onClick={() => {
+                  const data = {
+                    ...company,
+                    status: 'reject'
+                  }
+                  handleReject(data)
+                }}
                 className={'rounded'} variant="danger">Reject</Button>
                 <Button 
                 onClick={() => {

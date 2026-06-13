@@ -9,7 +9,7 @@ export default function Banner() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    console.log("Searching for:", { jobInput, locationInput });
+    // console.log("Searching for:", { jobInput, locationInput });
   };
 
   return (

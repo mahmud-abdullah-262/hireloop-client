@@ -33,7 +33,7 @@ const InfoRow = ({ icon: Icon, label, value, field, isLink, isEditing, formData,
           onChange={handleChange(field)}
           size="sm"
           variant="underlined"
-          classNames={{
+          classnames={{
             input: 'text-sm text-white/90 font-medium',
             inputWrapper: 'border-white/20',
           }}
@@ -120,7 +120,7 @@ const CompanyProfileClient = ({ company }) => {
                 value={formData.companyName}
                 onChange={handleChange('companyName')}
                 variant="underlined"
-                classNames={{
+                classnames={{
                   input: 'text-2xl font-bold text-white',
                   inputWrapper: 'border-white/20',
                 }}

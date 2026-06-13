@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 const CustomTable = ({data}) => {
-  console.log(data, 'data from component')
+  // console.log(data, 'data from component')
  const [page, setPage] = useState(1);
  const ITEMS_PER_PAGE = 5;
   const totalPages = Math.ceil(data.length/ITEMS_PER_PAGE);
