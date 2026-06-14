@@ -31,6 +31,16 @@ const res = await fetch(`${baseUrl}${path}`, {
 export const serverFetch = async (path) => {
   
   const res = await fetch(`${baseUrl}${path}`);
+
+  // যদি রেসপন্স ২00-299 এর মধ্যে না হয়
+    if (!res.ok) {
+      const errorData = await res.json();
+      console.error("Server API Error:", errorData);
+      return []; // সেফটি হিসেবে খালি অ্যারে রিটার্ন করুন
+    }
+
+
+
   const data = await res.json();
   return data;
 }

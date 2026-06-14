@@ -5,6 +5,8 @@ import { serverMutate } from "../core/server";
 import { revalidatePath } from "next/cache";
 import {  toast } from "@heroui/react";
 import { redirect } from "next/navigation";
+import { auth } from "../auth";
+import { headers } from "next/headers";
 const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL;
 
 
@@ -96,3 +98,16 @@ export async function updateCompanyStatus(id, data) {
   }
   return result
 }
+
+export const updateUserRole = async (userId, role) => {
+  const data = await auth.api.setRole({
+    body: {
+        userId: userId,
+        role: role, // required
+    },
+    // This endpoint requires session cookies.
+    headers: await headers(),
+});
+revalidatePath('/adminDashboard/users')
+return data
+} 
