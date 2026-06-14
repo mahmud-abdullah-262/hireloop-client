@@ -4,6 +4,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { serverMutate } from "../core/server";
 import { revalidatePath } from "next/cache";
 import {  toast } from "@heroui/react";
+import { redirect } from "next/navigation";
 const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL;
 
 
@@ -86,8 +87,12 @@ export async function createSubs(subsData) {
 
 export async function updateCompanyStatus(id, data) {
   const result = await serverMutate(`/api/companies/${id}`, data, 'PATCH')
+  console.log('result', result)
     if(result.success){
     revalidatePath('/adminDashboard/companies')
+  }
+  if(result.message == 'forbidden'){
+    redirect('/forbidden')
   }
   return result
 }

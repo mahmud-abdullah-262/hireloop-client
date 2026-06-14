@@ -3,6 +3,8 @@
 import { redirect } from "next/navigation";
 import { protectedFetch, serverFetch } from "../core/server";
 import { getSessionData } from "../session/getSession";
+import { headers } from "next/headers";
+import { auth } from "../auth";
 
 const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL || 'http://localhost:8000';
 
@@ -42,4 +44,18 @@ export const getPlansData = async (planId) => {
   return await serverFetch(`/api/plans?planId=${planId}`)
 }
 
+
+export const getUsers = async () => {
+  const users = await auth.api.listUsers({
+    query: {
+      
+        sortBy: "createdAt",
+        sortDirection: "desc",
+      
+    },
+    // This endpoint requires session cookies.
+    headers: await headers(),
+});
+return users
+}
 

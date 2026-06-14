@@ -18,15 +18,15 @@ const CompanyTable =  ({data}) => {
   // console.log('data after update:', companyData, id)
  }
 const handleReject = async(companyData) => {
-   const id = companyData._id ;
-  // console.log(companyData, id, 'handle approve clicked')
-
-  const result =  await updateCompanyStatus(id, companyData)
-  if(result){
+  const id = companyData._id;
+  const result = await updateCompanyStatus(id, companyData)
+  console.log(result)
+  if(result?.success){
     toast.danger('Company Rejected.')
+  } else {
+    toast.error(result?.message || 'Something went wrong')  // forbidden দেখাবে
   }
-  // console.log('data after update:', companyData, id)
- }
+}
 
  
  const [page, setPage] = useState(1);
