@@ -17,6 +17,10 @@ export default  function Navbar({user}) {
     label: 'Home',  
     href: '/'
   },
+  {
+    label: 'Jobs',
+    href: '/jobs'
+  },
    {
     label: 'Companies',  
     href: '/companies'

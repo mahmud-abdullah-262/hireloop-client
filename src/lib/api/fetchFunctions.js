@@ -22,8 +22,10 @@ export const getRecruiterCompany = async(recruiterId) => {
   return await protectedFetch(`/api/myCompany?recruiterId=${recruiterId}`)
 }
 
-export const getAllJobs = async() => {
-  return await serverFetch(`/api/jobs`)
+export const getAllJobs = async(query) => { 
+  // প্যারামিটারে কুয়েরি নিলাম, যেটা ক্লায়েন্ট সাইড থেকে আসছে, সার্ভারে ফেচ করার সময় প্যাথে কুয়েরি সেট করে দিলাম।
+
+  return await serverFetch(`/api/jobs?${query}`)
 }
 
 export const getJobById = async(jobId) =>{

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   InputGroup,
   TextField,
@@ -9,42 +9,59 @@ import {
   ListBox,
 } from "@heroui/react";
 import JobCard from "./JobCard";
+import { useRouter } from "next/navigation";
 
 const JOB_TYPES = ["Full-time", "Part-time", "Contract", "Internship"];
 const WORK_MODES = ["Remote", "On-site"];
+const categories = [ "Engineering",
+  "Design",
+  "Marketing",
+  "Sales",
+  "Finance",
+  "Human Resources",
+  "Operations",
+  "Customer Support",
+  "Product",
+  "Legal",
+  "Other",]
 
-export default function JobsClient({ jobs }) {
-  const [search, setSearch] = useState("");
-  const [selectedType, setSelectedType] = useState(null);
-  const [selectedMode, setSelectedMode] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+// ফিল্টার মেথডের ক্লায়েন্ট পার্ট -
+export default function JobsClient({ jobs, filters }) { // ক্লায়েন্ট সাইডে সার্চ প্যারামস নিয়ে আসা এবং এরেটা পাস করা
+  console.log('filters', filters)
+  const router = useRouter() // রাউটার পুশ করার দরকার হবে
 
-  const categories = useMemo(
-    () => [...new Set(jobs.map((j) => j.category).filter(Boolean))],
-    [jobs]
-  );
+  const [search, setSearch] = useState(filters.search); // স্টেটের মধ্যে সার্চ ইনপুট রাখছি, ডিফল্টভাবে সার্চ প্যারামস থেকে আসা ডাটা নিচ্ছি, যেন রিলোড/শেয়ার করার সময় সার্চ এলিমেন্টগুলো হারিয়ে না যায়।
+  const [selectedType, setSelectedType] = useState(filters.jobType);
+  const [selectedMode, setSelectedMode] = useState(filters.jobMode);
+  console.log(selectedMode, "selectedMode")
+  const [selectedCategory, setSelectedCategory] = useState(filters.jobCategory);
 
-  const filtered = useMemo(() => {
-    return jobs.filter((job) => {
-      if (search && !job.title.toLowerCase().includes(search.toLowerCase()))
-        return false;
+ 
 
-      if (selectedCategory && job.category !== selectedCategory)
-        return false;
+// ইউজ এফেক্ট ব্যবহার করে সার্চ/ফিল্টার চেঞ্জ হওয়া মাত্রই আবার সার্ভারে কল করা হবে।
+ useEffect(()=>{
+  const sp = new URLSearchParams() // ব্রাউজারের সার্চবারে কুয়েরি প্যারামিটার সেট করার জন্য, যেন সার্ভারসাইডে কাজ করা যায় এবং লিঙ্ক শেয়ার করা যায়, যেখানে সমস্ত প্যারামিটার থাকবে।
+  if(search){
+    sp.set('title', search) // ব্রাউজারের সার্চ বক্সে সেট করার জন্য .set মেথড ইউজ করা হয়, প্রথম প্যারামিটারে কুয়েরির কিওয়ার্ড দিতে হয়, পরের প্যারামিটারে স্টেটটা। একাধিক কুয়েরি সেট করা যায়, যেমনটা নিচে করা হয়েছে।
+  }
+  if(selectedCategory){
+    sp.set('category',selectedCategory ); // এখানে যে ডাটাবেজ থেকে ফিল্টার করা হবে সেই ডাটাবেজের কী অনুযায়ী প্রথম প্যারামিটার দিতে হবে। 
+  }
+  if(selectedType){
+      sp.set('type', selectedType)
+  }
+  if(selectedMode){
+ if(selectedMode == "Remote"){
+      sp.set('isRemote', true);
+  } else{
+    sp.set('isRemote', false)
+  }
+  }
 
-      if (selectedType && job.type !== selectedType)
-        return false;
 
-      if (selectedMode) {
-        const mode = job.isRemote
-          ? "Remote"
-          : "On-site";
-        if (mode !== selectedMode) return false;
-      }
-
-      return true;
-    });
-  }, [jobs, search, selectedCategory, selectedType, selectedMode]);
+  const path = `?${sp.toString()}` // একটা প্যাথ বানাতে হয় ব্রাউজারের সার্চ বক্সে শো করার জন্য এবং ব্যাকেন্ডে কুয়েরি করার জন্য। যেহেতু কুয়েরি হবে এজন্য শুরুতে ? চিহ্ন দিতে হয়, এবং স্ট্রিং আকারে যাবে তাই toString() মেথড ব্যবহার করা হয়।
+  router.push(path) // সেই প্যাথ ব্রাউজারের সার্চ বক্সে পুশ করে দেয়া হল
+ },[search, selectedType, router, selectedCategory, selectedMode]) // যা যা ব্যবহার করা হচ্ছে, ইউজ এফেক্ট সবকিছু ডিপেন্ডেন্সি এরেতে রেখে অবজার্ভ করে, কোনটায় চেঞ্জ আসলে আবার সার্ভারে কল করে।
 
   const hasActiveFilter = search || selectedCategory || selectedType || selectedMode;
 
@@ -172,13 +189,13 @@ export default function JobsClient({ jobs }) {
 
       {/* Result Count */}
       <p className="text-xs text-white/30">
-        {filtered.length} job{filtered.length !== 1 ? "s" : ""} found
+        {jobs.length} job{jobs.length !== 1 ? "s" : ""} found
       </p>
 
       {/* Job Grid */}
-      {filtered.length > 0 ? (
+      {jobs.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((job) => (
+          {jobs.map((job) => (
             <JobCard key={job._id} job={job} />
           ))}
         </div>
