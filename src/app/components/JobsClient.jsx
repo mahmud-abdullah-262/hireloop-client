@@ -10,6 +10,7 @@ import {
 } from "@heroui/react";
 import JobCard from "./JobCard";
 import { useRouter } from "next/navigation";
+import { Pagination } from '@heroui/react';
 
 const JOB_TYPES = ["Full-time", "Part-time", "Contract", "Internship"];
 const WORK_MODES = ["Remote", "On-site"];
@@ -30,12 +31,20 @@ export default function JobsClient({ jobs, filters }) { // ক্লায়েন
   console.log('filters', filters)
   const router = useRouter() // রাউটার পুশ করার দরকার হবে
 
+
+
+
+
+
+
   const [search, setSearch] = useState(filters.search); // স্টেটের মধ্যে সার্চ ইনপুট রাখছি, ডিফল্টভাবে সার্চ প্যারামস থেকে আসা ডাটা নিচ্ছি, যেন রিলোড/শেয়ার করার সময় সার্চ এলিমেন্টগুলো হারিয়ে না যায়।
   const [selectedType, setSelectedType] = useState(filters.jobType);
   const [selectedMode, setSelectedMode] = useState(filters.jobMode);
   console.log(selectedMode, "selectedMode")
   const [selectedCategory, setSelectedCategory] = useState(filters.jobCategory);
 
+
+  
  
 
 // ইউজ এফেক্ট ব্যবহার করে সার্চ/ফিল্টার চেঞ্জ হওয়া মাত্রই আবার সার্ভারে কল করা হবে।
@@ -50,6 +59,7 @@ export default function JobsClient({ jobs, filters }) { // ক্লায়েন
   if(selectedType){
       sp.set('type', selectedType)
   }
+ 
   if(selectedMode){
  if(selectedMode == "Remote"){
       sp.set('isRemote', true);
@@ -57,6 +67,8 @@ export default function JobsClient({ jobs, filters }) { // ক্লায়েন
     sp.set('isRemote', false)
   }
   }
+
+
 
 
   const path = `?${sp.toString()}` // একটা প্যাথ বানাতে হয় ব্রাউজারের সার্চ বক্সে শো করার জন্য এবং ব্যাকেন্ডে কুয়েরি করার জন্য। যেহেতু কুয়েরি হবে এজন্য শুরুতে ? চিহ্ন দিতে হয়, এবং স্ট্রিং আকারে যাবে তাই toString() মেথড ব্যবহার করা হয়।
@@ -204,6 +216,8 @@ export default function JobsClient({ jobs, filters }) { // ক্লায়েন
           No jobs match your filters.
         </div>
       )}
+
+
     </div>
   );
 }

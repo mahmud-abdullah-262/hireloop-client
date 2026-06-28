@@ -72,8 +72,8 @@ const RecruiterCompanyPage = async ({user}) => {
   const userdata = await user
   const recruiterId = userdata.id
 const companyData = await getRecruiterCompany(recruiterId)
-  // console.log(companyData, 'company data')
-  const company = companyData;
+  console.log(companyData, 'company data')
+  const company = companyData.message ? null : companyData;
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white w-full">

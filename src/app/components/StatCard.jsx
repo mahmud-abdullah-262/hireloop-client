@@ -30,12 +30,10 @@ export async function StatCard() {
   
   const jobRes = await getAllJobs()
 
-  const candidates = await fetch("http://localhost:5000/candidates");
-  const candidatesRes= await candidates.json();
+
 
   const values = [
-    jobRes.length,
-    candidatesRes.length,
+   
     jobRes.filter((j) => j.status === "Open").length,
     jobRes.filter((j) => j.status === "Closed").length,
   ];
@@ -50,7 +48,7 @@ export async function StatCard() {
           <div>
             <p className="text-xs text-default-500">{label}</p>
             <p className="text-2xl font-medium">
-              {values[i].toLocaleString()}
+              {values[i]}
             </p>
           </div>
         </Card>

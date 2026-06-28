@@ -53,16 +53,26 @@ export const protectedFetch = async (path) => {
 
   );
   const data = await res.json();
+  console.log(data, 'res from protected fetch')
   return handleStatusCode(data);
 }
 
 
 const handleStatusCode = res => {
-  if(res.status == 401){
+  console.log(res, "res")
+  
+  if (res.status == 401) {
     redirect('/unauthorized')
   }
-  if(res.status == 403){
+  if (res.status == 403) {
     redirect('/forbidden')
+  }
+  if (res.status == 404) {
+    console.log(" data did not found");
+    // আপনি চাইলে কোনো নোটিফিকেশন দেখাতে পারেন বা অন্য পেজে রিডাইরেক্ট করতে পারেন
+  }
+  if (res.status == 500) {
+    console.log("সার্ভারে কোনো সমস্যা হয়েছে");
   }
 
   return res
