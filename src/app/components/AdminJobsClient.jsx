@@ -1,0 +1,294 @@
+"use client";
+
+import { useState, useMemo, useEffect, useRef } from "react";
+import {
+  InputGroup,
+  TextField,
+  Label,
+  Select,
+  ListBox,
+  Table,
+} from "@heroui/react";
+import JobCard from "./JobCard";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Pagination } from '@heroui/react';
+import { EyeDashed, Trash } from "lucide-react";
+
+const JOB_TYPES = ["Full-time", "Part-time", "Contract", "Internship"];
+const WORK_MODES = ["Remote", "On-site"];
+const categories = [ "Engineering",
+  "Design",
+  "Marketing",
+  "Sales",
+  "Finance",
+  "Human Resources",
+  "Operations",
+  "Customer Support",
+  "Product",
+  "Legal",
+  "Other",]
+
+// ফিল্টার মেথডের ক্লায়েন্ট পার্ট -
+export default function AdminJobsClient({ jobs, filters, page, size, totalJobs }) { // ক্লায়েন্ট সাইডে সার্চ প্যারামস নিয়ে আসা এবং এরেটা পাস করা
+  console.log('page', page)
+  const router = useRouter() // রাউটার পুশ করার দরকার হবে
+  const searchParams = useSearchParams();
+  
+  const itemsPerPage = size;
+  const totalItems = parseInt(totalJobs.length);
+  const totalPages = Math.ceil(totalItems / size);
+  const startItem = totalItems === 0 ? 0 : (page - 1) * itemsPerPage + 1;
+  const endItem = Math.min(page * itemsPerPage, totalItems);
+
+
+
+
+  const [search, setSearch] = useState(filters.search); // স্টেটের মধ্যে সার্চ ইনপুট রাখছি, ডিফল্টভাবে সার্চ প্যারামস থেকে আসা ডাটা নিচ্ছি, যেন রিলোড/শেয়ার করার সময় সার্চ এলিমেন্টগুলো হারিয়ে না যায়।
+  const [selectedType, setSelectedType] = useState(filters.jobType);
+  const [selectedMode, setSelectedMode] = useState(filters.jobMode);
+
+  const [selectedCategory, setSelectedCategory] = useState(filters.jobCategory);
+
+  const handlePage =  (newPage) => {
+    console.log('pageination clicked', newPage, totalPages)
+      if (newPage < 1 || newPage > totalPages) return; 
+
+    const params = new URLSearchParams(searchParams.toString()); 
+    
+    params.set("page", newPage.toString()); 
+
+    router.push(`?${params.toString()}`); 
+
+  }
+  
+
+  
+ const isFirstRender = useRef(true);
+
+// ইউজ এফেক্ট ব্যবহার করে সার্চ/ফিল্টার চেঞ্জ হওয়া মাত্রই আবার সার্ভারে কল করা হবে।
+ useEffect(()=>{
+
+   if (isFirstRender.current) {
+    isFirstRender.current = false;
+    return; // প্রথমবার mount-এ filter sync/page reset করার দরকার নেই
+  }
+
+
+  const sp = new URLSearchParams() // ব্রাউজারের সার্চবারে কুয়েরি প্যারামিটার সেট করার জন্য, যেন সার্ভারসাইডে কাজ করা যায় এবং লিঙ্ক শেয়ার করা যায়, যেখানে সমস্ত প্যারামিটার থাকবে।
+  if(search){
+    sp.set('title', search) // ব্রাউজারের সার্চ বক্সে সেট করার জন্য .set মেথড ইউজ করা হয়, প্রথম প্যারামিটারে কুয়েরির কিওয়ার্ড দিতে হয়, পরের প্যারামিটারে স্টেটটা। একাধিক কুয়েরি সেট করা যায়, যেমনটা নিচে করা হয়েছে।
+  }
+  if(selectedCategory){
+    sp.set('category',selectedCategory ); // এখানে যে ডাটাবেজ থেকে ফিল্টার করা হবে সেই ডাটাবেজের কী অনুযায়ী প্রথম প্যারামিটার দিতে হবে। 
+  }
+  if(selectedType){
+      sp.set('type', selectedType)
+  }
+ 
+  if(selectedMode){
+ if(selectedMode == "Remote"){
+      sp.set('isRemote', true);
+  } else{
+    sp.set('isRemote', false)
+  }
+  }
+
+  sp.set('page', 1)
+
+
+
+
+
+  const path = `?${sp.toString()}` // একটা প্যাথ বানাতে হয় ব্রাউজারের সার্চ বক্সে শো করার জন্য এবং ব্যাকেন্ডে কুয়েরি করার জন্য। যেহেতু কুয়েরি হবে এজন্য শুরুতে ? চিহ্ন দিতে হয়, এবং স্ট্রিং আকারে যাবে তাই toString() মেথড ব্যবহার করা হয়।
+  router.push(path) // সেই প্যাথ ব্রাউজারের সার্চ বক্সে পুশ করে দেয়া হল
+ },[search, selectedType, router, selectedCategory, selectedMode]) // যা যা ব্যবহার করা হচ্ছে, ইউজ এফেক্ট সবকিছু ডিপেন্ডেন্সি এরেতে রেখে অবজার্ভ করে, কোনটায় চেঞ্জ আসলে আবার সার্ভারে কল করে।
+
+  const hasActiveFilter = search || selectedCategory || selectedType || selectedMode;
+
+  const handleReset = () => {
+    setSearch("");
+    setSelectedCategory(null);
+    setSelectedType(null);
+    setSelectedMode(null);
+  };
+
+  return (
+    <div className="w-11/12 mx-auto py-8 space-y-6 p-4">
+      <div className="space-y-2 mb-6">
+        <h1 className="text-2xl md:text-3xl lg:text-5xl font-bold">Available Jobs</h1>
+        
+      </div>
+      {/* Filter Bar */}
+      <div className=" flex flex-col md:flex-row gap-3">
+
+        {/* Search Input */}
+        <TextField className="md:max-w-xs w-full">
+          <Label className="text-xs text-white/40 mb-1">Search</Label>
+          <InputGroup>
+            <InputGroup.Prefix className="pl-3 text-white/40">
+              <svg
+                width="15" height="15" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor"
+                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+            </InputGroup.Prefix>
+            <InputGroup.Input
+              placeholder="Search jobs..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="bg-[#1a1a1f] text-white/80 placeholder:text-white/30 rounded-2xl"
+            />
+          </InputGroup>
+        </TextField>
+
+        {/* Category Select */}
+        <Select
+          className="md:max-w-[160px] w-full"
+          placeholder="Category"
+          selectedKey={selectedCategory}
+          onSelectionChange={(key) => setSelectedCategory(key || null)}
+        >
+          <Label className="text-xs text-white/40 mb-1">Category</Label>
+          <Select.Trigger>
+            <Select.Value />
+            <Select.Indicator />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              {categories.map((cat) => (
+                <ListBox.Item key={cat} id={cat} textValue={cat}>
+                  {cat}
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+              ))}
+            </ListBox>
+          </Select.Popover>
+        </Select>
+
+        {/* Job Type Select */}
+        <Select
+          className="md:max-w-[160px] w-full"
+          placeholder="Job Type"
+          selectedKey={selectedType}
+          onSelectionChange={(key) => setSelectedType(key || null)}
+        >
+          <Label className="text-xs text-white/40 mb-1">Type</Label>
+          <Select.Trigger>
+            <Select.Value />
+            <Select.Indicator />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              {JOB_TYPES.map((t) => (
+                <ListBox.Item key={t} id={t} textValue={t}>
+                  {t}
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+              ))}
+            </ListBox>
+          </Select.Popover>
+        </Select>
+
+        {/* Work Mode Select */}
+        <Select
+          className="md:max-w-[160px] w-full"
+          placeholder="Work Mode"
+          selectedKey={selectedMode}
+          onSelectionChange={(key) => setSelectedMode(key || null)}
+        >
+          <Label className="text-xs text-white/40 mb-1">Mode</Label>
+          <Select.Trigger>
+            <Select.Value />
+            <Select.Indicator />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              {WORK_MODES.map((m) => (
+                <ListBox.Item key={m} id={m} textValue={m}>
+                  {m}
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+              ))}
+            </ListBox>
+          </Select.Popover>
+        </Select>
+
+        {/* Reset Button */}
+        {hasActiveFilter && (
+          <button
+            onClick={handleReset}
+            className="text-sm text-white/40 hover:text-white/70 transition-colors px-2 pb-1 shrink-0"
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      {/* Result Count */}
+      <p className="text-xs text-white/30">
+        {totalItems} job{totalItems !== 1 ? "s" : ""} found
+      </p>
+
+      {/* Job Grid */}
+      {jobs.length > 0 ? (
+        <Table>
+      <Table.ScrollContainer>
+        <Table.Content aria-label="Team members" className="min-w-[600px]">
+          <Table.Header>
+            <Table.Column isRowHeader>Title</Table.Column>
+            <Table.Column>Company</Table.Column>
+            <Table.Column>Category</Table.Column>
+            <Table.Column>Type</Table.Column>
+            <Table.Column>Date Posted</Table.Column>
+            <Table.Column>Status</Table.Column>
+            <Table.Column>Actions</Table.Column>
+          </Table.Header>
+          <Table.Body>
+           {jobs.map(job => 
+             <Table.Row key={job?._id}>
+              <Table.Cell>{job?.title}</Table.Cell>
+              <Table.Cell>{job?.company}</Table.Cell>
+              <Table.Cell>{job?.category}</Table.Cell>
+              <Table.Cell>{job?.type}</Table.Cell>
+              <Table.Cell>{job?.createdAt}</Table.Cell>
+              <Table.Cell>{job?.status}</Table.Cell>
+              <Table.Cell className={'flex items-center justify-center gap-2 h-full p-4'}><Trash className="size-4"/> <EyeDashed className="size-4"/></Table.Cell>
+            </Table.Row>
+           )}
+          </Table.Body>
+        </Table.Content>
+      </Table.ScrollContainer>
+    </Table>
+      ) : (
+        <div className="text-center py-20 text-white/30 text-sm">
+          No jobs match your filters.
+        </div>
+      )}
+
+
+ <Pagination className="w-full">
+      <Pagination.Summary>
+        {startItem} to {endItem} of {totalItems} invoices
+      </Pagination.Summary>
+      <Pagination.Content>
+        <Pagination.Item>
+          <Pagination.Previous isDisabled={page === 1} onPress={() => handlePage(page - 1)}>
+            <Pagination.PreviousIcon />
+            <span>Prev</span>
+          </Pagination.Previous>
+        </Pagination.Item>
+        <Pagination.Item>
+          <Pagination.Next isDisabled={page === totalPages} onPress={() => handlePage(page + 1)}>
+            <span>Next</span>
+            <Pagination.NextIcon />
+          </Pagination.Next>
+        </Pagination.Item>
+      </Pagination.Content>
+    </Pagination>
+
+    </div>
+  );
+}
