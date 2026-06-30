@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import {
   InputGroup,
   TextField,
@@ -9,7 +9,7 @@ import {
   ListBox,
 } from "@heroui/react";
 import JobCard from "./JobCard";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Pagination } from '@heroui/react';
 
 const JOB_TYPES = ["Full-time", "Part-time", "Contract", "Internship"];
@@ -27,12 +27,16 @@ const categories = [ "Engineering",
   "Other",]
 
 // ফিল্টার মেথডের ক্লায়েন্ট পার্ট -
-export default function JobsClient({ jobs, filters }) { // ক্লায়েন্ট সাইডে সার্চ প্যারামস নিয়ে আসা এবং এরেটা পাস করা
-  console.log('filters', filters)
+export default function JobsClient({ jobs, filters, page, size, totalJobs }) { // ক্লায়েন্ট সাইডে সার্চ প্যারামস নিয়ে আসা এবং এরেটা পাস করা
+  console.log('page', page)
   const router = useRouter() // রাউটার পুশ করার দরকার হবে
-
-
-
+  const searchParams = useSearchParams();
+  
+  const itemsPerPage = size;
+  const totalItems = parseInt(totalJobs.length);
+  const totalPages = Math.ceil(totalItems / size);
+  const startItem = totalItems === 0 ? 0 : (page - 1) * itemsPerPage + 1;
+  const endItem = Math.min(page * itemsPerPage, totalItems);
 
 
 
@@ -40,15 +44,34 @@ export default function JobsClient({ jobs, filters }) { // ক্লায়েন
   const [search, setSearch] = useState(filters.search); // স্টেটের মধ্যে সার্চ ইনপুট রাখছি, ডিফল্টভাবে সার্চ প্যারামস থেকে আসা ডাটা নিচ্ছি, যেন রিলোড/শেয়ার করার সময় সার্চ এলিমেন্টগুলো হারিয়ে না যায়।
   const [selectedType, setSelectedType] = useState(filters.jobType);
   const [selectedMode, setSelectedMode] = useState(filters.jobMode);
-  console.log(selectedMode, "selectedMode")
+
   const [selectedCategory, setSelectedCategory] = useState(filters.jobCategory);
 
+  const handlePage =  (newPage) => {
+    console.log('pageination clicked', newPage, totalPages)
+      if (newPage < 1 || newPage > totalPages) return; 
+
+    const params = new URLSearchParams(searchParams.toString()); 
+    
+    params.set("page", newPage.toString()); 
+
+    router.push(`?${params.toString()}`); 
+
+  }
+  
 
   
- 
+ const isFirstRender = useRef(true);
 
 // ইউজ এফেক্ট ব্যবহার করে সার্চ/ফিল্টার চেঞ্জ হওয়া মাত্রই আবার সার্ভারে কল করা হবে।
  useEffect(()=>{
+
+   if (isFirstRender.current) {
+    isFirstRender.current = false;
+    return; // প্রথমবার mount-এ filter sync/page reset করার দরকার নেই
+  }
+
+
   const sp = new URLSearchParams() // ব্রাউজারের সার্চবারে কুয়েরি প্যারামিটার সেট করার জন্য, যেন সার্ভারসাইডে কাজ করা যায় এবং লিঙ্ক শেয়ার করা যায়, যেখানে সমস্ত প্যারামিটার থাকবে।
   if(search){
     sp.set('title', search) // ব্রাউজারের সার্চ বক্সে সেট করার জন্য .set মেথড ইউজ করা হয়, প্রথম প্যারামিটারে কুয়েরির কিওয়ার্ড দিতে হয়, পরের প্যারামিটারে স্টেটটা। একাধিক কুয়েরি সেট করা যায়, যেমনটা নিচে করা হয়েছে।
@@ -67,6 +90,9 @@ export default function JobsClient({ jobs, filters }) { // ক্লায়েন
     sp.set('isRemote', false)
   }
   }
+
+  sp.set('page', 1)
+
 
 
 
@@ -201,7 +227,7 @@ export default function JobsClient({ jobs, filters }) { // ক্লায়েন
 
       {/* Result Count */}
       <p className="text-xs text-white/30">
-        {jobs.length} job{jobs.length !== 1 ? "s" : ""} found
+        {totalItems} job{totalItems !== 1 ? "s" : ""} found
       </p>
 
       {/* Job Grid */}
@@ -217,6 +243,26 @@ export default function JobsClient({ jobs, filters }) { // ক্লায়েন
         </div>
       )}
 
+
+ <Pagination className="w-full">
+      <Pagination.Summary>
+        {startItem} to {endItem} of {totalItems} invoices
+      </Pagination.Summary>
+      <Pagination.Content>
+        <Pagination.Item>
+          <Pagination.Previous isDisabled={page === 1} onPress={() => handlePage(page - 1)}>
+            <Pagination.PreviousIcon />
+            <span>Prev</span>
+          </Pagination.Previous>
+        </Pagination.Item>
+        <Pagination.Item>
+          <Pagination.Next isDisabled={page === totalPages} onPress={() => handlePage(page + 1)}>
+            <span>Next</span>
+            <Pagination.NextIcon />
+          </Pagination.Next>
+        </Pagination.Item>
+      </Pagination.Content>
+    </Pagination>
 
     </div>
   );

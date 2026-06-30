@@ -15,9 +15,14 @@ const page = async ({searchParams}) => { // এর মাধ্যমে সা�
 
   console.log(filters, 'search params', "searchString", searchString)
 
-  const jobData = await getAllJobs(searchString); // সার্চ স্ট্রিংটা সার্ভারে পাঠালাম, বাকি কাজ সার্ভারে 
+const page = filters.page || 1
+ 
+
+  const data = await getAllJobs(searchString); // সার্চ স্ট্রিংটা সার্ভারে পাঠালাম, বাকি কাজ সার্ভারে 
+
+  const {totalJobs, result, size} = data
   
-  return <JobsClient filters={filters} jobs={jobData} />;
+  return <JobsClient filters={filters} jobs={result} page={parseInt(page)} size={size} totalJobs={totalJobs}/>;
 };
 
 export default page;

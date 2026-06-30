@@ -9,8 +9,8 @@ import { auth } from "../auth";
 const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL || 'http://localhost:8000';
 
 
-export const getCompany = async () => {
-return protectedFetch('/api/companies')
+export const getCompany = async (searchQu) => {
+return protectedFetch(`/api/companies?${searchQu}`)
 }
 
 export const getCompanyJobs = async (companyId, status = 'active') => {
