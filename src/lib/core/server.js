@@ -14,6 +14,7 @@ export const authHeader = async () => {
 
 // server mutation central function
 export const serverMutate = async (path, data, method = 'POST') => {
+  console.log('data before post', path, data, method)
 const res = await fetch(`${baseUrl}${path}`, {
     method: method.toUpperCase(),
     headers: {
@@ -24,7 +25,8 @@ const res = await fetch(`${baseUrl}${path}`, {
   });
   const result = await res.json();
   // console.log(result , 'data after post')
-  return result;
+
+  return { ...result, ok: res.ok, status: res.status };
 }
 
 // server fetching central function

@@ -1,5 +1,5 @@
 'use client'
-import { Button, Chip, toast } from "@heroui/react";
+import { Button, Chip, Pagination, toast } from "@heroui/react";
 import {
   Person,
   Envelope,
@@ -8,7 +8,10 @@ import {
   CircleCheck,
   CircleXmark,
 } from "@gravity-ui/icons";
-import { updateUserRole } from '@/lib/actions/action';
+import { deleteProfile, updateUserProfileStatus, updateUserRole } from '@/lib/actions/action';
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { getUsers } from "@/lib/api/fetchFunctions";
 
 const roleColorMap = {
   admin: "danger",
@@ -36,7 +39,16 @@ const formatDate = (dateObj) => {
 
 
 
-const UserPageClient =  ({users}) => {
+const UserPageClient =  ({users, totalData, currentPage, size}) => {
+ const router = useRouter()
+ const searchParams = useSearchParams();
+  const totalPages = Math.ceil(totalData / size);
+  const itemsPerPage = size;
+  const totalItems = totalData;
+
+    const startItem = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
+  const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+
 
 
   const handleUpdate = async (id, role) =>{
@@ -47,12 +59,55 @@ const UserPageClient =  ({users}) => {
    }
   }
 
+  const handleStatusUpdate = async (id, statusData) => {
+    
+    const body = {
+      status: statusData
+    }
+    console.log('function clicked', id, body)
+    const result = await updateUserProfileStatus(id, body, "PATCH")
+    if(result.ok){
+      toast.success(result.message)
+      router.refresh()
+    }else{
+      toast.danger(result.message)
+    }
+
+
+  }
+
+  const handleDelete = async (id) => {
+     const result = await deleteProfile(id, undefined, "DELETE")
+    if(result.ok){
+      toast.success(result.message)
+      router.refresh()
+    }else{
+      toast.danger(result.message)
+    }
+  }
+
+  
+
+   
+
+
+  const handlePageChange =  (newPage) => { // প্যারামিটারে পেজ নাম্বার আসছে
+    console.log('clicked', newPage, totalPages) 
+    if (newPage < 1 || newPage > totalPages) return; // যদি পেজ নাম্বার একের কম হয়, বা টোটাল পেজের কম হয় তাহলে রিটার্ন। টোটাল পেজ নাম্বার ফরম্যাটেঠিকভাবে দেয়া আছে কিনা দেখতে হবে।
+
+    const params = new URLSearchParams(searchParams.toString()); // বিদ্যমান ব্রাউজার টেক্সটটা  নিয়ে এসে স্ট্রিং বানালাম
+
+    params.set("page", newPage.toString()); // সেখানের পেজ প্যারামিটারে পেজিনেশনথেকে আসা পেজ নাম্বার সেট করলাম
+   
+    router.push(`?${params.toString()}`); // ব্রাউজারের এড্রেসবারে সেটা সেট করলাম।
+  };
+
   return (
     <div className="p-6">
   <h1 className="text-2xl font-semibold mb-6">
     Users{" "}
     <span className="text-sm font-normal text-default-500">
-      ({users.length} total)
+      ({totalItems} total)
     </span>
   </h1>
 
@@ -155,8 +210,7 @@ const UserPageClient =  ({users}) => {
                       <Button
                         onClick={() => {
                           if (window.confirm(`Are you sure you want to suspend ${user.name}?`)) {
-                            // এখানে আপনার সাসপেন্ড করার ফাংশনটি কল করুন
-                            // যেমন: handleStatusUpdate(id, 'suspended');
+                            handleStatusUpdate(user.id, 'suspended');
                           }
                         }}
                         variant="danger"
@@ -171,7 +225,7 @@ const UserPageClient =  ({users}) => {
                         onClick={() => {
                           if (window.confirm(`Are you sure you want to activate ${user.name}?`)) {
                             // এখানে আপনার অ্যাক্টিভেট করার ফাংশনটি কল করুন
-                            // যেমন: handleStatusUpdate(id, 'active');
+                             handleStatusUpdate(user.id, 'active');
                           }
                         }}
                         className="text-xs text-success hover:text-success/80 transition-colors"
@@ -181,8 +235,8 @@ const UserPageClient =  ({users}) => {
                       <Button
                         onClick={() => {
                           if (window.confirm(`⚠️ WARNING: Are you sure you want to permanently delete ${user.name}?`)) {
-                            // এখানে আপনার ডিলিট করার ফাংশনটি কল করুন
-                            // যেমন: handleDelete(id);
+                           
+                          handleDelete(user?.id);
                           }
                         }}
                         className="text-xs text-danger hover:text-danger/80 transition-colors"
@@ -198,6 +252,33 @@ const UserPageClient =  ({users}) => {
         })}
       </tbody>
     </table>
+  </div>
+
+
+  <div>
+    <Pagination className="justify-center">
+      <Pagination.Content>
+        <Pagination.Item>
+          <Pagination.Previous isDisabled={currentPage == 1} onPress={() => handlePageChange(currentPage - 1)}>
+            <Pagination.PreviousIcon />
+            <span>Previous</span>
+          </Pagination.Previous>
+        </Pagination.Item>
+        {Array.from({length: totalPages}, (_, i) => i + 1).map((p) => (
+          <Pagination.Item key={p}>
+            <Pagination.Link isActive={p === currentPage} onPress={() => handlePageChange(p)}>
+              {p}
+            </Pagination.Link>
+          </Pagination.Item>
+        ))}
+        <Pagination.Item>
+          <Pagination.Next isDisabled={currentPage === totalPages} onPress={() => handlePageChange(currentPage + 1)}>
+            <span>Next</span>
+            <Pagination.NextIcon />
+          </Pagination.Next>
+        </Pagination.Item>
+      </Pagination.Content>
+    </Pagination>
   </div>
 </div>
   );

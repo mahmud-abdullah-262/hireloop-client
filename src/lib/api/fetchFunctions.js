@@ -47,17 +47,28 @@ export const getPlansData = async (planId) => {
 }
 
 
-export const getUsers = async () => {
-  const users = await auth.api.listUsers({
+export const getUsers = async (page = 2, size = 10) => {
+  const limit = size;
+  const offset = (page - 1) * size;
+
+  const result = await auth.api.listUsers({
     query: {
-      
-        sortBy: "createdAt",
-        sortDirection: "desc",
-      
+      sortBy: "createdAt",
+      sortDirection: "desc",
+      limit,
+      offset,
     },
-    // This endpoint requires session cookies.
     headers: await headers(),
-});
-return users
-}
+  });
+
+  const { users, total } = result;
+  const totalPages = Math.ceil(total / size);
+
+  return {
+    users,
+    total,
+    totalPages,
+    currentPage: page,
+  };
+};
 

@@ -7,8 +7,9 @@ import { MapPin, Briefcase, Coins, ArrowRight } from "lucide-react";
 
 
 const FeaturedJob = async () => {
-  const jobData = await getAllJobs(); // সার্ভার থেকে জব ডেটা আনা হলো
-  const jobs = jobData.slice(0, 6); // প্রথম ৬টা নিলাম
+  const data = await getAllJobs(); // সার্ভার থেকে জব ডেটা আনা হলো
+  const {totalJobs} =  data
+  const jobs = totalJobs.slice(0, 6); // প্রথম ৬টা নিলাম
 
   return (
     <section className="bg-black px-4 py-20">

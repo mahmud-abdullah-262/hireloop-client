@@ -111,3 +111,29 @@ export const updateUserRole = async (userId, role) => {
 revalidatePath('/adminDashboard/users')
 return data
 } 
+
+export const updateUserProfileStatus = async (userId, status, method) => {
+   console.log('data before post', userId, status, method)
+  const result = await serverMutate(`/api/userProfile/?id=${userId}`, status, method)
+  console.log('result', result)
+    if(result.success){
+    revalidatePath('/adminDashboard/users')
+  }
+  if(result.message == 'forbidden'){
+    redirect('/forbidden')
+  }
+  return result
+}
+
+export const deleteProfile = async (userId, body, method) => {
+const result = await serverMutate(`/api/userProfile/?id=${userId}`, body, method)
+  console.log('result', result)
+    if(result.success){
+    revalidatePath('/adminDashboard/users')
+  }
+  if(result.message == 'forbidden'){
+    redirect('/forbidden')
+  }
+  return result
+
+}
