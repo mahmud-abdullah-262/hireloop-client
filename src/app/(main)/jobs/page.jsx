@@ -21,8 +21,9 @@ const page = filters.page || 1
   const data = await getAllJobs(searchString); // সার্চ স্ট্রিংটা সার্ভারে পাঠালাম, বাকি কাজ সার্ভারে 
 
   const {totalJobs, result, size} = data
-  
-  return <JobsClient filters={filters} jobsData={result} page={parseInt(page)} size={size} totalJobs={totalJobs}/>;
+  const jobs = result.filter(job => job.status == "active")
+  const totalData = totalJobs.filter(job => job.status == 'active')
+  return <JobsClient filters={filters} jobs={jobs} page={parseInt(page)} size={size} totalJobs={totalData}/>;
 };
 
 export default page;

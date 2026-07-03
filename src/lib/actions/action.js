@@ -151,3 +151,17 @@ export async function updateJobStatus(id, data) {
   }
   return result
 }
+
+
+export const deleteJob = async (userId, body, method) => {
+const result = await serverMutate(`/api/jobs/?id=${userId}`, body, method)
+  console.log('result', result)
+    if(result.success){
+    revalidatePath('/adminDashboard/jobs')
+  }
+  if(result.message == 'forbidden'){
+    redirect('/forbidden')
+  }
+  return result
+
+}

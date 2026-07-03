@@ -27,11 +27,11 @@ const categories = [ "Engineering",
   "Other",]
 
 // ফিল্টার মেথডের ক্লায়েন্ট পার্ট -
-export default function JobsClient({ jobsData, filters, page, size, totalJobs }) { // ক্লায়েন্ট সাইডে সার্চ প্যারামস নিয়ে আসা এবং এরেটা পাস করা
+export default function JobsClient({ jobs, filters, page, size, totalJobs }) { // ক্লায়েন্ট সাইডে সার্চ প্যারামস নিয়ে আসা এবং এরেটা পাস করা
   console.log('page', page)
   const router = useRouter() // রাউটার পুশ করার দরকার হবে
   const searchParams = useSearchParams();
-  const jobs = jobsData.filter(job => job.status == 'active')
+
   const itemsPerPage = size;
   const totalItems = parseInt(totalJobs.length);
   const totalPages = Math.ceil(totalItems / size);

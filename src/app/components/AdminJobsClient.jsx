@@ -16,7 +16,7 @@ import JobCard from "./JobCard";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Pagination } from '@heroui/react';
 import { Clock, EyeDashed, Trash, CircleCheck, Eye } from "lucide-react";
-import { updateJobStatus } from "@/lib/actions/action";
+import { deleteJob, updateJobStatus } from "@/lib/actions/action";
 
 const JOB_TYPES = ["Full-time", "Part-time", "Contract", "Internship"];
 const WORK_MODES = ["Remote", "On-site"];
@@ -128,6 +128,17 @@ export default function AdminJobsClient({ jobs, filters, page, size, totalJobs }
     } else(
       toast.danger(result.message)
     )
+  }
+
+  const handleDelete = async (jobId, data) => {
+   const result = await deleteJob(jobId, data, "DELETE")
+   if(result.ok){
+      toast.success(`Job Successfully Deleted`)
+      router.refresh()
+    } else(
+      toast.danger(result.message)
+    )
+
   }
 
   return (
@@ -287,7 +298,7 @@ export default function AdminJobsClient({ jobs, filters, page, size, totalJobs }
               
               >
                 <Button variant="danger"
-           
+                  onClick={() => handleDelete(job?._id, job)}
                 >
                     <Trash className="size-4"/> 
                 </Button>
