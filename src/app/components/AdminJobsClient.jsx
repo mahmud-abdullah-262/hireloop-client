@@ -8,11 +8,15 @@ import {
   Select,
   ListBox,
   Table,
+  Chip,
+  Button,
+  toast,
 } from "@heroui/react";
 import JobCard from "./JobCard";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Pagination } from '@heroui/react';
-import { EyeDashed, Trash } from "lucide-react";
+import { Clock, EyeDashed, Trash, CircleCheck, Eye } from "lucide-react";
+import { updateJobStatus } from "@/lib/actions/action";
 
 const JOB_TYPES = ["Full-time", "Part-time", "Contract", "Internship"];
 const WORK_MODES = ["Remote", "On-site"];
@@ -111,6 +115,20 @@ export default function AdminJobsClient({ jobs, filters, page, size, totalJobs }
     setSelectedType(null);
     setSelectedMode(null);
   };
+
+  const handlePending = async (jobId, status) => {
+    const data = {
+      status : status
+    }
+    console.log('pending job id', jobId, data)
+    const result = await updateJobStatus(jobId, data)
+    if(result.ok){
+      toast.success(`Job Status Updated to ${status}`)
+      router.refresh()
+    } else(
+      toast.danger(result.message)
+    )
+  }
 
   return (
     <div className="w-11/12 mx-auto py-8 space-y-6 p-4">
@@ -254,8 +272,44 @@ export default function AdminJobsClient({ jobs, filters, page, size, totalJobs }
               <Table.Cell>{job?.category}</Table.Cell>
               <Table.Cell>{job?.type}</Table.Cell>
               <Table.Cell>{job?.createdAt}</Table.Cell>
-              <Table.Cell>{job?.status}</Table.Cell>
-              <Table.Cell className={'flex items-center justify-center gap-2 h-full p-4'}><Trash className="size-4"/> <EyeDashed className="size-4"/></Table.Cell>
+              <Table.Cell>{job?.status == 'active' ? 
+               <Chip color="success">
+        <CircleCheck width={12} />
+        <Chip.Label>{job?.status}</Chip.Label>
+      </Chip>
+              :
+              <Chip color="warning">
+        <Clock width={12} />
+        <Chip.Label>Pending</Chip.Label>
+      </Chip>
+              }</Table.Cell>
+              <Table.Cell className={'flex items-center justify-center gap-2 h-full p-4'}
+              
+              >
+                <Button variant="danger"
+           
+                >
+                    <Trash className="size-4"/> 
+                </Button>
+              
+              {job?.status == 'active' ?
+                <Button variant="ghost"
+                     onClick={() => handlePending(job?._id, "pending")}
+                >
+                  
+                    <EyeDashed className="size-4"/>
+                </Button>
+              :
+                <Button variant="ghost"
+                      onClick={() => handlePending(job?._id, "active")}
+                >
+                  
+                    <Eye className="size-4"/>
+                </Button>
+              }
+              
+                
+                </Table.Cell>
             </Table.Row>
            )}
           </Table.Body>

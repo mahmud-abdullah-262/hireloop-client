@@ -22,7 +22,7 @@ const page = filters.page || 1
 
   const {totalJobs, result, size} = data
   
-  return <JobsClient filters={filters} jobs={result} page={parseInt(page)} size={size} totalJobs={totalJobs}/>;
+  return <JobsClient filters={filters} jobsData={result} page={parseInt(page)} size={size} totalJobs={totalJobs}/>;
 };
 
 export default page;

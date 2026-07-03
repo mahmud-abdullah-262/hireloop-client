@@ -12,7 +12,7 @@ const filters = await searchParams;
 
 
 const page = data.currentPage || 1
-const totalData = users.length
+const totalData = data.total
 const size = data.size
 
 

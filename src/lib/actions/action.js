@@ -137,3 +137,17 @@ const result = await serverMutate(`/api/userProfile/?id=${userId}`, body, method
   return result
 
 }
+
+
+export async function updateJobStatus(id, data) {
+  console.log('data check', id, data)
+  const result = await serverMutate(`/api/jobs/${id}`, data, 'PATCH')
+  console.log('result', result)
+    if(result.success){
+    revalidatePath('/adminDashboard/jobs')
+  }
+  if(result.message == 'forbidden'){
+    redirect('/forbidden')
+  }
+  return result
+}

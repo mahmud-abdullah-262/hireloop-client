@@ -256,7 +256,7 @@ const UserPageClient =  ({users, totalData, currentPage, size}) => {
 
 
   <div>
-    <Pagination className="justify-center">
+    <Pagination className="justify-center my-6">
       <Pagination.Content>
         <Pagination.Item>
           <Pagination.Previous isDisabled={currentPage == 1} onPress={() => handlePageChange(currentPage - 1)}>

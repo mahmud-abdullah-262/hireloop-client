@@ -47,7 +47,7 @@ export const getPlansData = async (planId) => {
 }
 
 
-export const getUsers = async (page = 2, size = 10) => {
+export const getUsers = async (page = 2, size = 6) => {
   const limit = size;
   const offset = (page - 1) * size;
 
@@ -69,6 +69,7 @@ export const getUsers = async (page = 2, size = 10) => {
     total,
     totalPages,
     currentPage: page,
+    size
   };
 };
 
