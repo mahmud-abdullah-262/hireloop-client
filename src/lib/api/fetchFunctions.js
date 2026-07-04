@@ -73,3 +73,7 @@ export const getUsers = async (page = 2, size = 6) => {
   };
 };
 
+export const subscriptionsByAdmin = async (query) => {
+  return await protectedFetch(`/api/subscriptions?${query}`)
+}
+

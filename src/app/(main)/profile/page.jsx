@@ -1,11 +1,12 @@
-'use client'
 
-import { authClient } from '@/lib/auth-client';
+
+
+import { getSessionData } from '@/lib/session/getSession';
 import React from 'react';
 
-const MyProfile = () => {
-   const { data: session, isPending } =  authClient.useSession();
-  const user = session?.user;
+const MyProfile = async () => {
+
+  const user = await getSessionData()
   console.log(user, 'user');
   return (
     <div>

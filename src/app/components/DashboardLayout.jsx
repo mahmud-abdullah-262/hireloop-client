@@ -11,7 +11,7 @@ const seekerNavLinks = [
   { icon: BookmarkFill,  label: "Saved Jobs",   href: "/seekerDashboard/savedjobs" },
   { icon: FileText,      label: "Applications", href: "/seekerDashboard/applications" },
   { icon: CreditCard,    label: "Billing",      href: "/seekerDashboard/billing" },
-  { icon: Gear,          label: "Settings",     href: "/seekerDashboard/settings" },
+  
 ];
 
 const recruiterNavLinks = [
@@ -19,7 +19,7 @@ const recruiterNavLinks = [
   { icon: Plus,     label: "Create a job",   href: "/recruiterdashboard/new" },
   { icon: Briefcase, label: "All Jobs",       href: "/recruiterdashboard/recruiteralljobs" },
   { icon: Person,   label: "Profile",        href: "/recruiterdashboard/recruitercompany" },
-  { icon: Gear,     label: "Settings",       href: "/recruiterdashboard/settings" },
+ 
 ];
 
 const adminNavLinks = [
@@ -28,7 +28,7 @@ const adminNavLinks = [
   { icon: Factory,                label: "Companies",  href: "/adminDashboard/companies" },
   { icon: Briefcase,               label: "Jobs",       href: "/adminDashboard/jobs" },
   { icon: CreditCard,              label: "Payments",   href: "/adminDashboard/payments" },
-  { icon: Gear,                    label: "Settings",   href: "/adminDashboard/settings" },
+ 
 ];
 
 const navLinkMappings = {
